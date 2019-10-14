@@ -9,6 +9,14 @@ html, body {
 	justify-content: space-between;
 }
 
+.flex-grid--centered {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+}
+
 .flex-grid__item {
 	padding: 1rem;
 	width: calc(25% - 2rem);

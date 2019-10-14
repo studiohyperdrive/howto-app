@@ -24,5 +24,8 @@ export class ProjectsOverviewPage {
 			this.shell.kill(cmd.pid);
 		}, 4000);
 	}
+
+	public addProject(): void {
+		this.builder.setupProject();
 	}
 }
