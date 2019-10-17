@@ -9,36 +9,41 @@ export class Cmd {
 
 	public pid$: Subject<string> = new Subject<string>();
 
-	private spawn;
+	private process;
 	private logger: Logger;
 
 	constructor(
 		public cmd: string,
 		options: any = {},
-		public args: any[] = [],
 	) {
-		const { spawn } = window.nw.require('child_process');
 
-		this.spawn = spawn;
+		this.process = window.nw.require('child_process');
 		this.logger = new Logger();
 		this.options = {
 			// stdio: 'inherit',
 			shell: true,
 			...options,
-		}
+		};
 	}
 
-	public exec(args: any[] = []): { cmd: Cmd; cp: Promise<string> } {
+	public exec(): { cmd: Cmd; cp: Promise<string> } {
 		const cp = new Promise<string>((resolve, reject) => {
-			this.cp = this.spawn(this.cmd, [...this.args, ...args], this.options);
+			this.cp = this.process.exec(this.cmd, this.options, (err, stdout, stderr) => {
+				if (stdout) {
+					this.logger.info(stdout);
+				}
 
-			this.cp.stdout.on('data', (message: Buffer) => {
-				this.logger.info(message.toString());
-			});
+				if (err || stderr) {
+					this.logger.error(err || stderr);
+				}
 
-			this.cp.stderr.on('data', (message: string) => {
-				this.logger.error(message);
-				reject(message);
+				this.pid$.complete();
+
+				if (err || stderr) {
+					reject();
+				} else {
+					resolve();
+				}
 			});
 
 			this.cp.on('close', (code: number) => {
@@ -48,6 +53,7 @@ export class Cmd {
 					this.logger.error(`Child process exited with code ${code}`);
 				}
 
+				this.pid$.complete();
 				resolve(code.toString());
 			});
 

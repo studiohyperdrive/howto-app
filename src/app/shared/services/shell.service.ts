@@ -8,8 +8,8 @@ import { Cmd } from './cmd';
 export class ShellService {
 	public pcs: Map<string, any> = new Map<string, any>();
 
-	public exec(command: string, ...args: any[]): { pcs: Promise<string>, cmd: Cmd } {
-		const cmd = new Cmd(command, {}, args);
+	public exec(cwd: string, command: string): { pcs: Promise<string>, cmd: Cmd } {
+		const cmd = new Cmd(command, { cwd });
 
 		cmd.pid$
 			.pipe(
@@ -29,7 +29,7 @@ export class ShellService {
 				}).catch((err: any) => {
 					this.pcs.delete(cmd.pid);
 
-					reject(err);
+					reject(err.toString());
 				});
 		});
 
