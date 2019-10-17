@@ -1,43 +1,36 @@
-// import { ChildProcess } from 'child_process';
 import { Injectable } from '@angular/core';
-import { first } from 'rxjs/operators';
-
-import { Cmd } from './cmd';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class ShellService {
 	public pcs: Map<string, any> = new Map<string, any>();
 
-	public exec(cwd: string, command: string): { pcs: Promise<string>, cmd: Cmd } {
-		const cmd = new Cmd(command, { cwd });
+	private execa;
+	private process;
 
-		cmd.pid$
-			.pipe(
-				first(),
-			)
-			.subscribe((pid: string) => {
-				this.pcs.set(pid, cmd);
+	constructor() {
+		this.execa = window.nw.require('execa');
+		this.process = window.nw.require('process');
+	}
+
+	public exec(command: string, { cwd }: { cwd?: string } = {}): Observable<any> {
+		return new Observable((subscriber) => {
+			const env = {
+				...this.process.env,
+				INIT_CWD: cwd,
+				PWD: cwd,
+				PATH: this.process.env.PATH.replace(`${this.process.cwd()}/node_modules/.bin`, ''),
+			};
+
+
+			this.run(command, env, cwd).then((result) => {
+				subscriber.next(result);
+				subscriber.complete();
+			}).catch((err) => {
+				subscriber.error(err);
+				subscriber.complete();
 			});
-
-		const { cp } = cmd.exec();
-		const pcs = new Promise<string>((resolve, reject) => {
-			cp
-				.then((response: any) => {
-					this.pcs.delete(cmd.pid);
-
-					resolve(response);
-				}).catch((err: any) => {
-					this.pcs.delete(cmd.pid);
-
-					reject(err.toString());
-				});
 		});
-
-
-		return {
-			pcs,
-			cmd,
-		};
 	}
 
 	public kill(pid: string): Promise<void> {
@@ -48,5 +41,15 @@ export class ShellService {
 
 			return this.pcs.get(pid).kill();
 		});
+	}
+
+	private async run(command: string, env: any, cwd: string): Promise<any> {
+		const { stdout, stderr } = await this.execa.command(command, { shell: true, cwd, env, extendEnv: false });
+
+		if (stderr) {
+			return Promise.reject(stderr);
+		}
+
+		return Promise.resolve(stdout);
 	}
 }

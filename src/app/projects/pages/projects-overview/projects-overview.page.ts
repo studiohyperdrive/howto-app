@@ -1,37 +1,50 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil, filter } from 'rxjs/operators';
 
-import { BuilderService } from '../../../builder/services/builder.service';
 import { DialogNewProjectComponent } from '../../components/new-project/new-project.component';
 
 @Component({
 	templateUrl: './projects-overview.page.html',
 })
-export class ProjectsOverviewPage {
+export class ProjectsOverviewPage implements OnInit, OnDestroy {
+	private destroyed$: Subject<boolean> = new Subject<boolean>();
+
 	constructor(
-		private builder: BuilderService,
 		private dialog: MatDialog,
-	) {
-		// const { cmd, pcs } = this.shell.exec('bash', ['./test.sh']);
+		private router: Router,
+		private route: ActivatedRoute,
+		private projectService: ProjectService,
+	) {}
 
-		// pcs.then((result: string) => {
-		// 	console.log(result);
-		// })
-		// 	.catch((error: any) => {
-		// 		console.log(error);
-		// 	});
+	public ngOnInit(): void {
+	}
 
-		// console.log('RUNNING');
-		// setTimeout(() => {
-		// 	this.shell.kill(cmd.pid);
-		// }, 4000);
+	public ngOnDestroy(): void {
+		this.destroyed$.next(true);
+		this.destroyed$.complete();
 	}
 
 	public addProject(): void {
-		const dialogRef = this.dialog.open(DialogNewProjectComponent);
-
-		dialogRef.afterClosed().subscribe((projectName: string) => {
-			this.builder.setupProject(projectName);
+		const dialogRef = this.dialog.open(DialogNewProjectComponent, {
+			height: '300px',
+			width: '400px',
 		});
+
+		dialogRef.afterClosed()
+			.pipe(
+				takeUntil(this.destroyed$),
+				filter((projectName: string) => !!projectName),
+			)
+			.subscribe((projectName: string) => {
+				this.router.navigate(['.', 'new'], {
+					relativeTo: this.route,
+					queryParams: {
+						projectName,
+					},
+				});
+			});
 	}
 }

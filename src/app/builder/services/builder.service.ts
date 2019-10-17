@@ -1,13 +1,14 @@
 import { Injectable, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { Observable, of, throwError, merge, concat } from 'rxjs';
 
 import { ShellService } from '../../shared/services/shell.service';
+import { BuilderStatus } from '../builder.types';
 
 @Injectable()
 export class BuilderService {
 	private path;
 	private fs;
-	private cli;
 	private require;
 
 	constructor(
@@ -16,47 +17,45 @@ export class BuilderService {
 	) {
 		this.path = this.doc.defaultView.nw.require('path');
 		this.fs = this.doc.defaultView.nw.require('fs');
-		this.cli = this.doc.defaultView.nw.require(this.path.join(this.doc.defaultView.nw.process.cwd(), 'cli.js'));
 		this.require = this.doc.defaultView.nw.require;
 	}
 
-	public setupProject(name: string): Promise<void> {
+	public setupProject(name: string): Observable<any> {
 		const root = this.path.join(this.require('os').homedir(), 'Projects');
 
 		if (!this.makeDir(root)) {
-			return Promise.reject();
+			return throwError(BuilderStatus.MKDIR_FAILED);
 		}
 
-		// const schematics = this.cli(this.doc.defaultView.nw.require, { root });
+		const run = (command: string, options: any, status: BuilderStatus) => merge(
+			of(status),
+			this.shell.exec(command, options),
+		);
 
-		// return schematics({ args: ['@studiohyperdrive/howto-schematics:styleguide'] });
+		const generateApp = run(`ng new ${name} --routing true --style scss --skipInstall true --defaults true`, {
+			cwd: root,
+		}, BuilderStatus.INIT_APP);
+		const installDependencies = run('npm install --silent', {
+			cwd: this.path.join(root, name),
+		}, BuilderStatus.INSTALLING_PACKAGES);
+		const installSchematics = run('npm link @studiohyperdrive/howto-schematics', {
+			cwd: this.path.join(root, name),
+		}, BuilderStatus.INSTALLING_SCHEMATICS);
+		const generateStyleguide = run(`ng g @studiohyperdrive/howto-schematics:styleguide`, {
+			cwd: this.path.join(root, name),
+		}, BuilderStatus.INIT_STYLEGUIDE);
+		const buildUI = run(`ng build ui`, {
+			cwd: this.path.join(root, name),
+		}, BuilderStatus.BUILD_UI);
 
-		// const schematics = path.join(this.doc.defaultView.nw.process.cwd(), 'node_modules', '@angular-devkit', 'schematics-cli', 'bin', 'schematics.js');
-		// return cli(this.doc.defaultView.nw.require, schematics, '@studiohyperdrive/howto-schematics:styleguide');
-
-		// const { pcs } = this.shell.exec(path.join(homeFolder, 'Projects'), 'node', schematics, '@studiohyperdrive/howto-schematics:styleguide');
-
-		debugger;
-
-		// const { pcs } = this.shell.exec(root, 'which ng');
-
-		// return pcs as Promise<any>;
-
-		const { pcs: generateApp } = this.shell.exec(root, `which ng && ng new ${name} --routing true --style scss --skipInstall true --defaults true`);
-
-		return generateApp.then(() => {
-			const { pcs: generateProject } = this.shell.exec(this.path.join(root, name), 'ng g @studiohyperdrive/howto-schematics:styleguide');
-
-			return generateProject;
-		}) as Promise<any>;
-
-		// return new Promise((resolve, reject) => {
-		// 	fs.access('~/Projects', fs.constants.F_OK, (err) => {
-		// 		debugger;
-
-		// 		resolve();
-		// 	});
-		// });
+		return concat(
+			generateApp,
+			installDependencies,
+			installSchematics,
+			generateStyleguide,
+			buildUI,
+			of(BuilderStatus.DONE),
+		);
 	}
 
 	private makeDir(root: string): boolean {
