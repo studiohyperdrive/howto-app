@@ -1,16 +1,6 @@
 <div class="flex-grid">
-	<div class="flex-grid__item">
-		<howto-project-card></howto-project-card>
-	</div>
-	<div class="flex-grid__item">
-		<howto-project-card></howto-project-card>
-	</div>
-	<div class="flex-grid__item">
-		<howto-project-card></howto-project-card>
-	</div>
-
-	<div class="flex-grid__item">
-		<howto-project-card></howto-project-card>
+	<div class="flex-grid__item" *ngFor="let project of projects">
+		<howto-project-card [project]="project"></howto-project-card>
 	</div>
 </div>
 

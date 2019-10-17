@@ -7,6 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { SharedComponents } from './components/index';
 import { ShellService } from './services/shell.service';
@@ -23,6 +24,7 @@ import { ShellService } from './services/shell.service';
 		MatButtonModule,
 		MatDialogModule,
 		MatFormFieldModule,
+		MatProgressBarModule,
 	],
 	declarations: [
 		SharedComponents,

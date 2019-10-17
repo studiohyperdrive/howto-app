@@ -5,11 +5,15 @@ import { Subject } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
 
 import { DialogNewProjectComponent } from '../../components/new-project/new-project.component';
+import { ProjectService } from '../../services/project.service';
+import { Project } from '../../types/project';
 
 @Component({
 	templateUrl: './projects-overview.page.html',
 })
 export class ProjectsOverviewPage implements OnInit, OnDestroy {
+	public projects: Project[] = [];
+
 	private destroyed$: Subject<boolean> = new Subject<boolean>();
 
 	constructor(
@@ -20,6 +24,15 @@ export class ProjectsOverviewPage implements OnInit, OnDestroy {
 	) {}
 
 	public ngOnInit(): void {
+		this.projectService.projects$
+			.pipe(
+				takeUntil(this.destroyed$),
+			)
+			.subscribe((projects: Project[]) => {
+				this.projects = projects;
+			});
+
+		this.projectService.getProjects();
 	}
 
 	public ngOnDestroy(): void {
@@ -31,6 +44,9 @@ export class ProjectsOverviewPage implements OnInit, OnDestroy {
 		const dialogRef = this.dialog.open(DialogNewProjectComponent, {
 			height: '300px',
 			width: '400px',
+			data: {
+				projects: this.projects.map((project: Project) => project.name),
+			},
 		});
 
 		dialogRef.afterClosed()

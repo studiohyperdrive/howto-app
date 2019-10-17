@@ -1,9 +1,9 @@
-import { ProjectCardComponent } from './project-card/project-card.component';
 import { DialogNewProjectComponent } from './new-project/new-project.component';
+import { ProjectCardComponent } from './project-card/project-card.component';
 
 export const ProjectsComponents = [
-	ProjectCardComponent,
 	DialogNewProjectComponent,
+	ProjectCardComponent,
 ];
 
 export const ProjectsEntryComponents = [
