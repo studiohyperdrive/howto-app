@@ -1,7 +1,7 @@
 <mat-card class="project-card">
-	<img mat-card-image src="https://picsum.photos/200/160">
+	<img mat-card-image src="https://picsum.photos/300/240">
 	<mat-card-header>
-		<mat-card-title>{{ project.name }}</mat-card-title>
+		<mat-card-title>{{ project.name | titlecase }}</mat-card-title>
 		<mat-card-subtitle>Get this from package.json?</mat-card-subtitle>
 	</mat-card-header>
 	<mat-card-content>
@@ -10,7 +10,7 @@
 		</p>
 	</mat-card-content>
 	<mat-card-actions>
-		<button mat-stroked-button>Details</button>
+		<a [routerLink]="['/projects', project.name]" mat-stroked-button>Details</a>
 		<button mat-stroked-button>Edit</button>
 	</mat-card-actions>
 </mat-card>

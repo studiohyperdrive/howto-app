@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ProjectsOverviewPage } from './pages/projects-overview/projects-overview.page';
 import { NewProjectPage } from './pages/new-project/new-project.page';
+import { ProjectDetailPage } from './pages/project-detail/project-detail.page';
 
 const routes: Routes = [
 	{
@@ -15,6 +16,10 @@ const routes: Routes = [
 		data: {
 			title: 'Create New Project',
 		},
+	},
+	{
+		path: ':project',
+		component: ProjectDetailPage,
 	},
 ];
 
