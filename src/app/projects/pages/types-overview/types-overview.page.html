@@ -5,7 +5,7 @@
     </div>
 
     <div class="flex-grid__item" *ngFor="let item of type.items">
-      <p class="mat-body">{{ item.name }}</p>
+      <howto-type-card [type]="item"></howto-type-card>
     </div>
 
     <div class="flex-grid__item" *ngIf="!type.items.length">

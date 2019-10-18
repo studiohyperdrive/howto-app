@@ -86,8 +86,12 @@ export class TypesOverviewPage implements OnInit, OnDestroy {
 				filter((typeName: string) => !!typeName),
 			)
 			.subscribe((typeName: string) => {
-				this.router.navigate([type, typeName], {
+				this.router.navigate([type, 'new'], {
 					relativeTo: this.route,
+					queryParams: {
+						name: typeName,
+						project: this.project.name,
+					},
 				});
 			});
 	}

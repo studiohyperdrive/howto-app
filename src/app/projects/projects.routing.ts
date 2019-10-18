@@ -5,6 +5,7 @@ import { ProjectsOverviewPage } from './pages/projects-overview/projects-overvie
 import { NewProjectPage } from './pages/new-project/new-project.page';
 import { ProjectDetailPage } from './pages/project-detail/project-detail.page';
 import { TypesOverviewPage } from './pages/types-overview/types-overview.page';
+import { NewTypePage } from './pages/new-type/new-type.page';
 import { TypeDetailPage } from './pages/type-detail/type-detail.page';
 
 const routes: Routes = [
@@ -16,7 +17,7 @@ const routes: Routes = [
 		path: 'new',
 		component: NewProjectPage,
 		data: {
-			title: 'Create New Project',
+			title: 'Creating New Project',
 		},
 	},
 	{
@@ -28,6 +29,13 @@ const routes: Routes = [
 				component: TypesOverviewPage,
 				data: {
 					title: '{project}',
+				},
+			},
+			{
+				path: ':type/new',
+				component: NewTypePage,
+				data: {
+					title: 'Creating New {type}',
 				},
 			},
 			{

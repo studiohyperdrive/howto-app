@@ -103,7 +103,7 @@ export class BuilderService {
 		);
 	}
 
-	private generateType({ name, type, project }: { name: string; type: BuilderType; project: string; }): Observable<BuilderStatus> {
+	public generateType({ name, type, project }: { name: string; type: BuilderType; project: string; }): Observable<BuilderStatus> {
 		if (!this.fs.pathExists(name)) {
 			throwError(BuilderStatus.PROJECT_DOES_NOT_EXIST);
 		}
