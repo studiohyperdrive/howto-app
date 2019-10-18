@@ -1,20 +1,23 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 
-import { Project } from '../types/project';
+import { Project, UiComponent } from '../types/project';
+import { BuilderType } from 'src/app/builder/builder.types';
+import { FileService } from 'src/app/shared/services/file.service';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class ProjectService {
-	public projects$: Subject<Project[]> = new Subject<Project[]>();
+	public project$: ReplaySubject<Project> = new ReplaySubject<Project>(1);
+	public projects$: ReplaySubject<Project[]> = new ReplaySubject<Project[]>(1);
 
-	private fs;
 	private path;
 	private projectsRoot;
 
-	constructor() {
-		this.fs = window.nw.require('fs');
+	constructor(
+		private fs: FileService,
+	) {
 		this.path = window.nw.require('path');
 
 		const homedir = window.nw.require('os').homedir();
@@ -23,15 +26,10 @@ export class ProjectService {
 	}
 
 	public getProjects(): void {
-		const projectLocations = this.fs.readdirSync(this.projectsRoot)
-			.map((path: string) => this.path.join(this.projectsRoot, path))
-			.filter((path: string) =>
-				!path.startsWith('.')
-				&& this.fs.lstatSync(path).isDirectory()
-			);
+		const projectLocations = this.fs.readDir(this.projectsRoot, { dirsOnly: true });
 
 		const projects = projectLocations.reduce((acc, path: string) => {
-			const workspace = this.getWorkspace(this.path.join(path, 'angular.json'));
+			const workspace = this.getWorkspace(path);
 
 			if (!workspace) {
 				return acc;
@@ -40,7 +38,6 @@ export class ProjectService {
 			return [
 				...acc,
 				{
-					id: Date.now().toString(),
 					name: workspace.defaultProject,
 					location: path,
 				},
@@ -50,21 +47,50 @@ export class ProjectService {
 		this.projects$.next(projects);
 	}
 
-	public getWorkspace(path: string): any {
-		if (!this.fs.existsSync(path)) {
-			return null;
-		}
+	public getProject(name: string): void {
+		const projectLocation = this.path.join(this.projectsRoot, name);
+		const workspace = this.getWorkspace(projectLocation);
 
-		return this.readJSON(path);
+		if (workspace) {
+			this.project$.next({
+				name: workspace.defaultProject,
+				location: projectLocation,
+				types: {
+					atoms: this.getTypes({ path: projectLocation, workspace, type: BuilderType.atom }),
+					molecules: this.getTypes({ path: projectLocation, workspace, type: BuilderType.molecule }),
+					organisms: this.getTypes({ path: projectLocation, workspace, type: BuilderType.organism }),
+					pages: this.getTypes({ path: projectLocation, workspace, type: BuilderType.page }),
+				},
+			});
+		}
 	}
 
-	private readJSON(path: string): any {
-		try {
-			const fileContents = this.fs.readFileSync(path, { encoding: 'UTF-8' });
+	public clearProject(): void {
+		this.project$.complete();
+		this.project$ = new ReplaySubject<Project>();
+	}
 
-			return JSON.parse(fileContents);
-		} catch (e) {
-			return null;
+	public getWorkspace(path: string): any {
+		return this.fs.readFile(this.path.join(path, 'angular.json'), { json: true });
+	}
+
+	public getTypes({ path, type, workspace }: { path: string; type: BuilderType; workspace: any; }): UiComponent[] {
+		if (!workspace.projects.ui) {
+			return [];
 		}
+
+		const typeRoot = this.path.resolve(path, workspace.projects.ui.sourceRoot, 'lib', `${type}s`);
+
+		if (!this.fs.pathExists(typeRoot)) {
+			return [];
+		}
+
+		const types = this.fs.readDir(typeRoot, { dirsOnly: true });
+
+		return types.map((typePath: string) => ({
+			location: typePath,
+			name: typePath.split('/').pop(),
+			type,
+		}));
 	}
 }
