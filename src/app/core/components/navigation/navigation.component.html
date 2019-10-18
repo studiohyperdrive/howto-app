@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
 	<mat-toolbar-row>
-	  <span>Projects</span>
+	  <span>{{ context.title$ | async | titlecase }}</span>
 	</mat-toolbar-row>
 </mat-toolbar>

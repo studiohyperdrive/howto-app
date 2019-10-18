@@ -12,6 +12,9 @@ const routes: Routes = [
 	{
 		path: 'new',
 		component: NewProjectPage,
+		data: {
+			title: 'Create New Project',
+		},
 	},
 ];
 
