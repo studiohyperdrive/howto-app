@@ -37,4 +37,21 @@ export class FileService {
 	public pathExists(path: string): boolean {
 		return this.fs.existsSync(path);
 	}
+
+	public makeDir(path: string): boolean {
+		const mkdirSync = (targetPath: string) => {
+			try {
+				this.fs.mkdirSync(targetPath);
+				return true;
+			} catch (e) {
+				return false;
+			}
+		};
+
+		if (this.pathExists(path)) {
+			return true;
+		}
+
+		return mkdirSync(path);
+	}
 }
