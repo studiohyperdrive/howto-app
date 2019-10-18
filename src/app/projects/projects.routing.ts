@@ -5,6 +5,7 @@ import { ProjectsOverviewPage } from './pages/projects-overview/projects-overvie
 import { NewProjectPage } from './pages/new-project/new-project.page';
 import { ProjectDetailPage } from './pages/project-detail/project-detail.page';
 import { TypesOverviewPage } from './pages/types-overview/types-overview.page';
+import { TypeDetailPage } from './pages/type-detail/type-detail.page';
 
 const routes: Routes = [
 	{
@@ -27,6 +28,13 @@ const routes: Routes = [
 				component: TypesOverviewPage,
 				data: {
 					title: '{project}',
+				},
+			},
+			{
+				path: ':type/:id',
+				component: TypeDetailPage,
+				data: {
+					title: '{project} {type}',
 				},
 			},
 		],
