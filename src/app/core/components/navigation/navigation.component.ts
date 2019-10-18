@@ -54,7 +54,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
 		return newValues;
 	}
 
-	private buildRouteDataFromTree(route: ActivatedRouteSnapshot): { title?: string; } {
+	private buildRouteDataFromTree(route: ActivatedRouteSnapshot): { data?: { [key: string]: string; } } {
 		return this.traverseTree(route, ['data']);
 	}
 
