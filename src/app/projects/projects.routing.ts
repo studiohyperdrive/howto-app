@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { ProjectsOverviewPage } from './pages/projects-overview/projects-overview.page';
 import { NewProjectPage } from './pages/new-project/new-project.page';
 import { ProjectDetailPage } from './pages/project-detail/project-detail.page';
+import { TypesOverviewPage } from './pages/types-overview/types-overview.page';
 
 const routes: Routes = [
 	{
@@ -20,6 +21,15 @@ const routes: Routes = [
 	{
 		path: ':project',
 		component: ProjectDetailPage,
+		children: [
+			{
+				path: '',
+				component: TypesOverviewPage,
+				data: {
+					title: '{project}',
+				},
+			},
+		],
 	},
 ];
 

@@ -1,0 +1,28 @@
+<ng-container *ngFor="let type of types">
+  <div class="flex-grid flex-grid--stretched">
+    <div class="flex-grid__header">
+      <h2 class="mat-h2">{{ type.title }}</h2>
+    </div>
+
+    <div class="flex-grid__item" *ngFor="let item of type.items">
+      <p class="mat-body">{{ item.name }}</p>
+    </div>
+
+    <div class="flex-grid__item" *ngIf="!type.items.length">
+      <mat-card class="type-card">
+        <mat-card-content>
+          <p>{{ type.emptyMessage }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="flex-grid__item">
+      <button mat-raised-button color="primary" (click)="addType(type.type)">
+        <mat-icon>add</mat-icon>
+        {{ type.addMessage }}
+      </button>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+</ng-container>
