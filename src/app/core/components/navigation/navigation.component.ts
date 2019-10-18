@@ -9,6 +9,9 @@ import { replaceAll } from 'src/app/shared/utils/replace-all';
 @Component({
 	selector: 'howto-navigation',
 	templateUrl: './navigation.component.html',
+	styleUrls: [
+		'./navigation.component.scss',
+	],
 })
 export class NavigationComponent implements OnInit, OnDestroy {
 	private destroyed$: Subject<boolean> = new Subject<boolean>();
@@ -37,6 +40,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
 	public ngOnDestroy(): void {
 		this.destroyed$.next(true);
 		this.destroyed$.complete();
+	}
+
+	public toggleSidebar(): void {
+		this.context.toggleSidebar();
 	}
 
 	private traverseTree(tree: ActivatedRouteSnapshot, props: string[], values = {}): any {

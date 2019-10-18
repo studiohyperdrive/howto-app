@@ -3,6 +3,10 @@ html, body {
 	margin: 0;
 }
 
+.u-main {
+  min-height: 85vh;
+}
+
 .flex-grid {
   padding: .5rem;
 	display: flex;

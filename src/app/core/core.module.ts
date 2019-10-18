@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
+
+import { SharedModule } from '../shared/shared.module';
 
 import { CoreComponents } from './components';
 
@@ -9,7 +10,7 @@ import { CoreComponents } from './components';
 		CoreComponents,
 	],
 	imports: [
-		CommonModule,
+		SharedModule,
 		MatToolbarModule,
 	],
 	exports: [

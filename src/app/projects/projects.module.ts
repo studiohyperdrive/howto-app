@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 
 import { ProjectsComponents, ProjectsEntryComponents } from './components';
-import { ProjectsPages } from './pages';
+import { ProjectsPages } from './pages/index';
 import { ProjectsRoutingModule } from './projects.routing';
 
 @NgModule({

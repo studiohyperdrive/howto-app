@@ -1,5 +1,12 @@
 <mat-toolbar color="primary">
 	<mat-toolbar-row>
-	  <span>{{ context.title$ | async | titlecase }}</span>
+    <button mat-icon-button color="white" class="menu-toggle" (click)="toggleSidebar()">
+      <mat-icon *ngIf="(context.sidebarOpen$ | async); else sidebarClosedIconTpl">close</mat-icon>
+    </button>
+	  <h1>{{ context.title$ | async | titlecase }}</h1>
 	</mat-toolbar-row>
 </mat-toolbar>
+
+<ng-template #sidebarClosedIconTpl>
+  <mat-icon>menu</mat-icon>
+</ng-template>
