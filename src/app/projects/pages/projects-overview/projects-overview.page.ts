@@ -10,6 +10,9 @@ import { Project } from '../../types/project';
 
 @Component({
 	templateUrl: './projects-overview.page.html',
+	styleUrls: [
+		'./projects-overview.page.scss',
+	],
 })
 export class ProjectsOverviewPage implements OnInit, OnDestroy {
 	public projects: Project[] = [];

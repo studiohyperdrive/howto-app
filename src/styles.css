@@ -4,20 +4,30 @@ html, body {
 }
 
 .flex-grid {
+  padding: .5rem;
 	display: flex;
 	flex-wrap: wrap;
 }
 
 .flex-grid--centered {
-  display: flex;
-  flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
-  text-align: center;
+}
+
+.flex-grid--stretched {
+  justify-content: stretch;
+  align-items: center;
+}
+
+.flex-grid--stretched .flex-grid__item {
+  width: 100%;
 }
 
 .flex-grid__item {
-	padding: 1rem;
-	width: calc(25% - 2rem);
-	flex-shrink: 0;
+	padding: .5rem;
+}
+
+.flex-grid__header {
+  padding: .5rem;
+  width: 100%;
 }
