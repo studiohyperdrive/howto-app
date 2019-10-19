@@ -3,7 +3,8 @@
     <button mat-icon-button color="white" class="menu-toggle" (click)="toggleSidebar()">
       <mat-icon *ngIf="(context.sidebarOpen$ | async); else sidebarClosedIconTpl">close</mat-icon>
     </button>
-	  <h1>{{ context.title$ | async | titlecase }}</h1>
+    <h1>{{ context.title$ | async | titlecase }}</h1>
+    <howto-action class="menu-action"></howto-action>
 	</mat-toolbar-row>
 </mat-toolbar>
 

@@ -1,0 +1,19 @@
+<ng-container *ngIf="context.action$ | async as action">
+  <button *ngIf="!action.pid; else runningTpl" mat-icon-button color="white" (click)="runAction()">
+    <mat-icon>{{ action.icon || 'play_arrow' }}</mat-icon>
+  </button>
+</ng-container>
+
+<ng-template #runningTpl>
+  <button *ngIf="hovered; else progressTpl" mat-icon-button color="white" (click)="stopAction()">
+    <mat-icon>stop</mat-icon>
+  </button>
+</ng-template>
+
+<ng-template #progressTpl>
+  <mat-spinner
+    class="mat-spinner--inverted"
+    color="background"
+    diameter="32"
+  ></mat-spinner>
+</ng-template>

@@ -35,3 +35,8 @@ html, body {
   padding: .5rem;
   width: 100%;
 }
+
+.mat-progress-spinner--inverted circle,
+.mat-spinner--inverted circle {
+  stroke: #fff !important;
+}
