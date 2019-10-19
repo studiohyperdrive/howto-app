@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { Observable, of, throwError, merge, concat } from 'rxjs';
+import { Observable, of, throwError, concat } from 'rxjs';
 
 import { FileService } from '../../shared/services/file.service';
 import { ShellService } from '../../shared/services/shell.service';
@@ -94,15 +94,6 @@ export class BuilderService {
 		});
 	}
 
-	public run({ cmd, status, project }: { cmd: string; status: BuilderStatus; project?: string; }): Observable<BuilderStatus> {
-		return merge(
-			of(status),
-			this.shell.exec(cmd, {
-				cwd: project ? this.path.resolve(this.root, project) : this.root,
-			}),
-		);
-	}
-
 	public generateType({ name, type, project }: { name: string; type: BuilderType; project: string; }): Observable<BuilderStatus> {
 		if (!this.fs.pathExists(name)) {
 			throwError(BuilderStatus.PROJECT_DOES_NOT_EXIST);
@@ -124,5 +115,13 @@ export class BuilderService {
 			buildUI,
 			of(BuilderStatus.DONE),
 		);
+	}
+
+	private run({ cmd, status, project }: { cmd: string; status: BuilderStatus; project?: string; }): Observable<BuilderStatus> {
+		return this.shell.run<BuilderStatus>({
+			cmd,
+			status: status.toString(),
+			cwd: project,
+		});
 	}
 }

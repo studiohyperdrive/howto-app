@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
+import { ReplaySubject, Observable, merge, concat } from 'rxjs';
 
 import { Project, UiComponent } from '../types/project';
-import { BuilderType } from 'src/app/builder/builder.types';
-import { FileService } from 'src/app/shared/services/file.service';
+import { BuilderType, BuilderStatus } from '../../builder/builder.types';
+import { FileService } from '../../shared/services/file.service';
+import { RunnerService } from '../../shared/services/runner.service';
+import { BrowserType, RunningProcess } from '../../shared/types/os';
+import { ShellService } from '../../shared/services/shell.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -17,12 +20,16 @@ export class ProjectService {
 
 	constructor(
 		private fs: FileService,
+		private runner: RunnerService,
+		private shell: ShellService,
 	) {
 		this.path = window.nw.require('path');
 
 		const homedir = window.nw.require('os').homedir();
 
 		this.projectsRoot = this.path.join(homedir, 'Projects');
+
+		this.launchProject = this.launchProject.bind(this);
 	}
 
 	public getProjects(): void {
@@ -92,5 +99,35 @@ export class ProjectService {
 			name: typePath.split('/').pop(),
 			type,
 		}));
+	}
+
+	public launchProject(project: string): Observable<RunningProcess> {
+		const buildUI = this.shell.run({
+			cmd: 'ng build ui',
+			status: BuilderStatus.BUILD_UI.toString(),
+			cwd: project,
+		});
+		const runStyleguide = this.shell.run({
+			cmd: 'ng serve styleguide',
+			status: BuilderStatus.RUN_STYLEGUIDE.toString(),
+			cwd: project,
+		});
+
+		const watchUI = this.shell.run({
+			cmd: 'ng build ui --watch',
+			status: BuilderStatus.WATCH_UI.toString(),
+			cwd: project,
+		});
+
+		const launchBrowser = this.runner.launchBrowser({
+			type: BrowserType.CHROME,
+			url: 'http://localhost:4200', // TODO: get this dynamically
+		});
+
+		return merge(
+			concat(buildUI, runStyleguide),
+			launchBrowser,
+			watchUI,
+		);
 	}
 }

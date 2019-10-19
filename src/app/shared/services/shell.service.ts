@@ -1,16 +1,31 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, merge, of } from 'rxjs';
 
 @Injectable()
 export class ShellService {
-	public pcs: Map<string, any> = new Map<string, any>();
+	public pcs: Map<string, any> = new Map<string, any>(); // TODO: fix this, does nothing atm
 
 	private execa;
+	private path;
 	private process;
+
+	private root;
 
 	constructor() {
 		this.execa = window.nw.require('execa');
+		this.path = window.nw.require('path');
 		this.process = window.nw.require('process');
+
+		this.root = this.path.join(window.nw.require('os').homedir(), 'Projects');
+	}
+
+	public run<T = any>({ cmd, status, cwd }: { cmd: string; status: string; cwd?: string; }): Observable<T> {
+		return merge(
+			of(status),
+			this.exec(cmd, {
+				cwd: cwd ? this.path.resolve(this.root, cwd) : this.root,
+			}),
+		);
 	}
 
 	public exec(command: string, { cwd }: { cwd?: string } = {}): Observable<any> {
@@ -23,7 +38,7 @@ export class ShellService {
 			};
 
 
-			this.run(command, env, cwd).then((result) => {
+			this.runCommand(command, env, cwd).then((result) => {
 				subscriber.next(result);
 				subscriber.complete();
 			}).catch((err) => {
@@ -43,8 +58,13 @@ export class ShellService {
 		});
 	}
 
-	private async run(command: string, env: any, cwd: string): Promise<any> {
-		const { stdout, stderr } = await this.execa.command(command, { shell: true, cwd, env, extendEnv: false });
+	private async runCommand(command: string, env: any, cwd: string): Promise<any> {
+		const pcs = this.execa.command(command, { shell: true, cwd, env, extendEnv: false });
+		pcs.stdout.on('data', (message) => {
+			console.log(message.toString());
+		});
+
+		const { stdout, stderr } = await pcs;
 
 		if (stderr) {
 			return Promise.reject(stderr);

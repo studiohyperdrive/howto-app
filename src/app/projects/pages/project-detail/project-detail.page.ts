@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { ProjectService } from '../../services/project.service';
 import { Project } from '../../types/project';
+import { ContextService } from '../../../shared/services/context.service';
+import { RunningProcess } from 'src/app/shared/types/os';
 
 @Component({
 	templateUrl: './project-detail.page.html',
@@ -17,9 +19,17 @@ export class ProjectDetailPage implements OnInit, OnDestroy {
 	constructor(
 		private route: ActivatedRoute,
 		private projectService: ProjectService,
-	) {}
+		private context: ContextService,
+	) {
+		this.launchProject = this.launchProject.bind(this);
+	}
 
 	public ngOnInit(): void {
+		this.context.setAction({
+			name: 'launchStyleguideInBrowser',
+			exec: this.launchProject,
+		});
+
 		this.projectService.project$
 			.pipe(
 				takeUntil(this.destroyed$),
@@ -36,5 +46,9 @@ export class ProjectDetailPage implements OnInit, OnDestroy {
 		this.destroyed$.complete();
 
 		this.projectService.clearProject();
+	}
+
+	private launchProject(): Observable<RunningProcess> {
+		return this.projectService.launchProject(this.project.name);
 	}
 }
