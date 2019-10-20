@@ -13,7 +13,7 @@
       "6. Remove 'node-remote' from build.strippedProperties"
     ]
   ],
-  "name": "nw-angular",
+  "name": "howto-app",
   "version": "1.2.0",
   "main": "http://localhost:8964",
   "node-remote": "http://localhost:8964",

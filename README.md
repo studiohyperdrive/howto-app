@@ -51,3 +51,6 @@ List the team that has worked on this project, including the duration e.g.:
 * [Denis Valcke - Studio Hyperdrive](denis.valcke@studiohyperdrive.be)
     * **Function**: JavaScript developer
     * **Period**: September 2019 -> ...
+
+## Attributions
+Icon made by Freepik from www.flaticon.com
