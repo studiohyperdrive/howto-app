@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, first } from 'rxjs/operators';
 
 import { BuilderService } from '../../../builder/services/builder.service';
 import { BuilderStatus } from '../../../builder/builder.types';
 import { LoaderType } from '../../../shared/types/loader';
+import { ProjectService } from '../../services/project.service';
 
 @Component({
 	templateUrl: './new-type.page.html',
@@ -32,6 +33,7 @@ export class NewTypePage implements OnInit, OnDestroy {
 		private builder: BuilderService,
 		private router: Router,
 		private route: ActivatedRoute,
+		private projectService: ProjectService
 	) {}
 
 	public ngOnInit(): void {
@@ -54,9 +56,11 @@ export class NewTypePage implements OnInit, OnDestroy {
 				this.status = status;
 
 				if (status === BuilderStatus.DONE) {
-					setTimeout(() => {
-						this.router.navigate(['/projects', project]);
-					}, 2000);
+					this.projectService.getProject(project);
+
+					this.projectService.project$
+						.pipe(first())
+						.subscribe(() => this.router.navigate(['/projects', project]));
 				}
 			});
 	}
