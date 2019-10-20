@@ -5,7 +5,7 @@
     </div>
 
     <div class="flex-grid__item" *ngFor="let item of type.items">
-      <howto-type-card [type]="item"></howto-type-card>
+      <howto-type-card [type]="item" (clicked)="handleTypeClicked($event)"></howto-type-card>
     </div>
 
     <div class="flex-grid__item" *ngIf="!type.items.length">

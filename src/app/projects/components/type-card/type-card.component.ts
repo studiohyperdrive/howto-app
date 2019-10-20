@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { UiComponent } from '../../types/project';
 
@@ -8,4 +8,5 @@ import { UiComponent } from '../../types/project';
 })
 export class TypeCardComponent {
 	@Input() public type: UiComponent;
+	@Output() public clicked: EventEmitter<UiComponent> = new EventEmitter<UiComponent>();
 }
