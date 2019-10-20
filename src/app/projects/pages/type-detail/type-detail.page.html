@@ -1,11 +1,17 @@
 <mat-tab-group dynamicHeight>
 	<mat-tab label="Component">
-		<ngx-monaco-editor class="editor" [options]="componentEditor" [(ngModel)]="componentEditor.content"></ngx-monaco-editor>
+		<ng-template matTabContent>
+			<ngx-monaco-editor class="editor" [options]="componentEditor" [(ngModel)]="componentEditor.content"></ngx-monaco-editor>
+		</ng-template>
 	</mat-tab>
 	<mat-tab label="Template">
-		<ngx-monaco-editor class="editor" [options]="templateEditor" [(ngModel)]="templateEditor.content"></ngx-monaco-editor>
+		<ng-template matTabContent>
+			<ngx-monaco-editor class="editor" [options]="templateEditor" [(ngModel)]="templateEditor.content"></ngx-monaco-editor>
+		</ng-template>
 	</mat-tab>
 	<mat-tab label="Styling">
-		<ngx-monaco-editor class="editor" [options]="stylingEditor" [(ngModel)]="stylingEditor.content"></ngx-monaco-editor>
+		<ng-template matTabContent>
+			<ngx-monaco-editor class="editor" [options]="stylingEditor" [(ngModel)]="stylingEditor.content"></ngx-monaco-editor>
+		</ng-template>
 	</mat-tab>
 </mat-tab-group>
