@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
-import { ProjectsPages } from './pages';
-import { ProjectsComponents } from './components';
-import { ProjectsRoutingModule } from './projects.routing';
+
 import { SharedModule } from '../shared/shared.module';
+
+import { ProjectsComponents, ProjectsEntryComponents } from './components';
+import { ProjectsPages } from './pages/index';
+import { ProjectsRoutingModule } from './projects.routing';
 
 @NgModule({
 	declarations: [
@@ -12,6 +14,9 @@ import { SharedModule } from '../shared/shared.module';
 	imports: [
 		ProjectsRoutingModule,
 		SharedModule,
-	]
+	],
+	entryComponents: [
+		ProjectsEntryComponents,
+	],
 })
 export class ProjectsModule { }

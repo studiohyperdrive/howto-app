@@ -1,5 +1,13 @@
 <howto-navigation></howto-navigation>
 
-<div class="u-main">
-	<router-outlet></router-outlet>
-</div>
+<mat-sidenav-container>
+  <mat-sidenav mode="side" [opened]="context.sidebarOpen$ | async">
+    <howto-sidenav></howto-sidenav>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <div class="u-main">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

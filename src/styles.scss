@@ -1,0 +1,42 @@
+html, body {
+	padding: 0;
+	margin: 0;
+}
+
+.u-main {
+  min-height: 85vh;
+}
+
+.flex-grid {
+  padding: .5rem;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.flex-grid--centered {
+  justify-content: space-around;
+  align-items: center;
+}
+
+.flex-grid--stretched {
+  justify-content: stretch;
+  align-items: center;
+}
+
+.flex-grid--stretched .flex-grid__item {
+  width: 100%;
+}
+
+.flex-grid__item {
+	padding: .5rem;
+}
+
+.flex-grid__header {
+  padding: .5rem;
+  width: 100%;
+}
+
+.mat-progress-spinner--inverted circle,
+.mat-spinner--inverted circle {
+  stroke: #fff !important;
+}

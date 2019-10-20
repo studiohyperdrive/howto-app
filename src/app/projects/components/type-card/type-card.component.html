@@ -1,0 +1,9 @@
+<mat-card class="type-card">
+  <mat-card-content>
+    <p>{{ type.name }}</p>
+  </mat-card-content>
+  <mat-card-actions>
+    <a [routerLink]="['./', type.type, type.name]" mat-stroked-button>Details</a>
+    <button mat-stroked-button>Edit</button>
+  </mat-card-actions>
+</mat-card>

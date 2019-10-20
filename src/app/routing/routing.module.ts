@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ProjectsOverviewPage } from '../projects/pages/projects-overview/projects-overview.page';
 
 const routes: Routes = [{
 	path: '',
@@ -9,6 +8,15 @@ const routes: Routes = [{
 }, {
 	path: 'projects',
 	loadChildren: () => import('../projects/projects.module').then((module) => module.ProjectsModule),
+	data: {
+		title: 'Projects',
+	},
+}, {
+	path: 'settings',
+	loadChildren: () => import('../settings/settings.module').then((module) => module.SettingsModule),
+	data: {
+		title: 'Settings',
+	},
 }];
 
 @NgModule({

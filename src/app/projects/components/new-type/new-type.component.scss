@@ -1,0 +1,23 @@
+:host, form {
+  height: 100%;
+  width: 100%;
+}
+
+form {
+  display: flex;
+  flex-flow: column;
+  align-items: stretch;
+}
+
+.mat-dialog-content {
+  flex: 1 1 100%;
+}
+
+.mat-dialog-actions {
+  justify-self: flex-end;
+  margin-bottom: -12px;
+}
+
+.mat-form-field {
+  display: block;
+}
