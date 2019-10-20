@@ -13,6 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatToolbarModule } from '@angular/material/toolbar';
+
 
 import { SharedComponents } from './components/index';
 import { ShellService } from './services/shell.service';
@@ -36,6 +38,7 @@ import { ShellService } from './services/shell.service';
 		MatListModule,
 		MatProgressBarModule,
 		MatProgressSpinnerModule,
+		MatToolbarModule,
 	],
 	declarations: [
 		SharedComponents,
@@ -55,6 +58,7 @@ import { ShellService } from './services/shell.service';
 		MatListModule,
 		MatProgressBarModule,
 		MatProgressSpinnerModule,
+		MatToolbarModule,
 
 		SharedComponents,
 	],

@@ -1,4 +1,10 @@
 <ng-container *ngIf="project; else loadingTpl">
+  <mat-toolbar>
+    <a mat-button [routerLink]="['/projects']">projects</a>
+    <mat-icon>arrow_right</mat-icon>
+    <a mat-button [routerLink]="['/projects', project.name]">{{project.name}}</a>
+  </mat-toolbar>
+
   <router-outlet></router-outlet>
 </ng-container>
 
