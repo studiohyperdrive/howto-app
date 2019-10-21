@@ -1,6 +1,9 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
+import slugify from 'slugify';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { InstantErrorMatcher } from '../../../shared/utils/error-state-matcher';
 
@@ -11,9 +14,12 @@ import { InstantErrorMatcher } from '../../../shared/utils/error-state-matcher';
 		'./new-project.component.scss',
 	],
 })
-export class DialogNewProjectComponent implements OnInit {
-	public newProjectForm: FormGroup;
+export class DialogNewProjectComponent implements OnInit, OnDestroy {
 	public errorStateMatcher = new InstantErrorMatcher();
+	public newProjectForm: FormGroup;
+	public slugified = '';
+
+	private destroyed$: Subject<boolean> = new Subject<boolean>();
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: any,
@@ -27,6 +33,19 @@ export class DialogNewProjectComponent implements OnInit {
 				this.projectDoesNotExist(),
 			]),
 		});
+
+		this.newProjectForm.get('name').valueChanges
+			.pipe(
+				takeUntil(this.destroyed$),
+			)
+			.subscribe((name: string) => {
+				this.slugified = slugify(name);
+			});
+	}
+
+	public ngOnDestroy(): void {
+		this.destroyed$.next(true);
+		this.destroyed$.complete();
 	}
 
 	public onCancel(): void {
@@ -34,7 +53,7 @@ export class DialogNewProjectComponent implements OnInit {
 	}
 
 	public handleFormSubmit(): void {
-		this.dialogRef.close(this.newProjectForm.value.name);
+		this.dialogRef.close(slugify(this.newProjectForm.value.name));
 	}
 
 	private projectDoesNotExist(): ValidatorFn {

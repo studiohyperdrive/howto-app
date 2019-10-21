@@ -4,6 +4,7 @@
     <mat-form-field appearance="outline">
       <mat-label>Project name</mat-label>
       <input matInput [errorStateMatcher]="errorStateMatcher" formControlName="name" autocomplete="off" />
+      <mat-hint *ngIf="slugified" align="start">Project name will be "{{ slugified }}"</mat-hint>
       <mat-error *ngIf="newProjectForm?.get('name')?.errors?.projectExists">A project with this name already exists</mat-error>
     </mat-form-field>
   </mat-dialog-content>
