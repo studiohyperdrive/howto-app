@@ -5,6 +5,7 @@ import { RunningProcess } from './os';
 export interface ExecutableAction {
 	name: string;
 	icon?: string;
-	pid?: number;
+	running?: boolean;
 	exec: () => Observable<RunningProcess>;
+	stop: () => void;
 }

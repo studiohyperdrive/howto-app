@@ -22,12 +22,14 @@ export class ProjectDetailPage implements OnInit, OnDestroy {
 		private context: ContextService,
 	) {
 		this.launchProject = this.launchProject.bind(this);
+		this.stopProject = this.stopProject.bind(this);
 	}
 
 	public ngOnInit(): void {
 		this.context.setAction({
 			name: 'launchStyleguideInBrowser',
 			exec: this.launchProject,
+			stop: this.stopProject,
 		});
 
 		this.projectService.project$
@@ -50,5 +52,9 @@ export class ProjectDetailPage implements OnInit, OnDestroy {
 
 	private launchProject(): Observable<RunningProcess> {
 		return this.projectService.launchProject(this.project.name);
+	}
+
+	private stopProject(): void {
+		return this.projectService.stopProject(this.project.name);
 	}
 }

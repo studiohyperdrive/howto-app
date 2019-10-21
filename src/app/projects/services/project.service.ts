@@ -19,6 +19,7 @@ export class ProjectService {
 
 	private path;
 	private projectsRoot;
+	private pcs: Map<string, { pids: string[]; close$: Subject<boolean>}> = new Map<string, { pids: string[]; close$: Subject<boolean>}>();
 
 	constructor(
 		private fs: FileService,
@@ -123,27 +124,24 @@ export class ProjectService {
 			cwd: project,
 		});
 
-		const launchBrowser = this.runner.launchBrowser({
+		const { exec$: launchBrowser$, pid: launchBrowserPid } = this.runner.launchBrowser({
 			type: BrowserType.CHROME,
 			url: 'http://localhost:4200', // TODO: get this dynamically
-		}).pipe(
+		});
+
+		const launchBrowser = launchBrowser$.pipe(
 			finalize(() => {
-				Promise.all([
-					this.shell.kill(watchUIPid),
-					this.shell.kill(runStyleguidePid),
-				]).then(() => {
-					closeStream$.next(true);
-					closeStream$.complete();
-				}).catch(() => {
-					// TODO: handle error
-					closeStream$.next(true);
-					closeStream$.complete();
-				});
+				this.stopProject(project);
 			}),
 		);
 
 		const waitForIt = this.shell.wait({
 			port: 4200,
+		});
+
+		this.pcs.set(project, {
+			pids: [ watchUIPid, runStyleguidePid, launchBrowserPid ],
+			close$: closeStream$,
 		});
 
 		return merge(
@@ -155,6 +153,24 @@ export class ProjectService {
 		).pipe(
 			takeUntil(closeStream$),
 		);
+	}
+
+	public stopProject(project: string): void {
+		if (!this.pcs.has(project)) {
+			return;
+		}
+
+		const { pids, close$ } = this.pcs.get(project);
+
+		Promise.all(pids.map((pid: string) => this.shell.kill(pid)))
+			.then(() => {
+				close$.next(true);
+				close$.complete();
+			}).catch(() => {
+				// TODO: handle error
+				close$.next(true);
+				close$.complete();
+			});
 	}
 
 	public openInCode(path: string): Observable<any> {

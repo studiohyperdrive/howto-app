@@ -23,7 +23,11 @@ export class ShellService {
 		this.root = this.path.join(window.nw.require('os').homedir(), 'Projects');
 	}
 
-	public run<T = any>({ cmd, status, cwd }: { cmd: string; status: string; cwd?: string; }): { exec$: Observable<T>, pid: number; } {
+	public registerProcess(pid: string, pcs: any): void {
+		this.pcs.set(pid, pcs);
+	}
+
+	public run<T = any>({ cmd, status, cwd }: { cmd: string; status: string; cwd?: string; }): { exec$: Observable<T>, pid: string; } {
 		const { pid, exec$ } = this.exec(cmd, {
 			cwd: cwd ? this.path.resolve(this.root, cwd) : this.root,
 		});
@@ -37,7 +41,7 @@ export class ShellService {
 		};
 	}
 
-	public exec(command: string, { cwd }: { cwd?: string } = {}): { exec$: Observable<any>, pid: number; } {
+	public exec(command: string, { cwd }: { cwd?: string } = {}): { exec$: Observable<any>, pid: string; } {
 		const pid = this.uuid();
 
 		return {
@@ -108,4 +112,6 @@ export class ShellService {
 			return Promise.reject(e);
 		}
 	}
+
+	public
 }
