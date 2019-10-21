@@ -1,5 +1,5 @@
 <ng-container *ngIf="context.action$ | async as action">
-  <button *ngIf="!action.pid; else runningTpl" mat-icon-button color="white" (click)="runAction()">
+  <button *ngIf="!action.running; else runningTpl" mat-icon-button color="white" (click)="runAction()">
     <mat-icon>{{ action.icon || 'play_arrow' }}</mat-icon>
   </button>
 </ng-container>

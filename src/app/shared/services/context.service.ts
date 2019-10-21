@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 import { ExecutableAction } from '../types/action';
-import { tap, finalize } from 'rxjs/operators';
-import { RunningProcess } from '../types/os';
 
 @Injectable({
 	providedIn: 'root',
@@ -47,18 +46,22 @@ export class ContextService {
 					this.stopAction();
 				}),
 			)
-			.subscribe(({ pid }: RunningProcess) => {
-				this.action$.next({
-					...this.action$.getValue(),
-					pid,
-				});
-			});
+			.subscribe();
+
+		this.action$.next({
+			...this.action$.getValue(),
+			running: true,
+		});
 	}
 
 	public stopAction(): void {
+		const action = this.action$.getValue();
+
+		action.stop();
+
 		this.action$.next({
-			...this.action$.getValue(),
-			pid: null,
+			...action,
+			running: false,
 		});
 	}
 }

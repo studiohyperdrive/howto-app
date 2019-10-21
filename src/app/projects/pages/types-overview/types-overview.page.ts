@@ -101,6 +101,6 @@ export class TypesOverviewPage implements OnInit, OnDestroy {
 	}
 
 	public handleTypeClicked(type: UiComponent): void {
-		this.projectService.openInCode(type.location);
+		this.projectService.openInCode(type.location).subscribe();
 	}
 }

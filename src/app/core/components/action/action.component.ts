@@ -23,7 +23,7 @@ export class ActionComponent {
 
 	@HostListener('mouseenter')
 	public onMouseEnter(): void {
-		if (!!this.context.action$.getValue().pid) {
+		if (this.context.action$.getValue().running) {
 			this.hovered = true;
 		}
 	}

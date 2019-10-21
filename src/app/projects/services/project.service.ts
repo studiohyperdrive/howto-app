@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ReplaySubject, Observable, merge, concat } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { ReplaySubject, Observable, merge, concat, Subject } from 'rxjs';
+import { first, finalize, takeUntil } from 'rxjs/operators';
 
 import { Project, UiComponent } from '../types/project';
 import { BuilderType, BuilderStatus } from '../../builder/builder.types';
@@ -18,6 +18,7 @@ export class ProjectService {
 
 	private path;
 	private projectsRoot;
+	private pcs: Map<string, { pids: string[]; close$: Subject<boolean>}> = new Map<string, { pids: string[]; close$: Subject<boolean>}>();
 
 	constructor(
 		private fs: FileService,
@@ -74,14 +75,21 @@ export class ProjectService {
 	}
 
 	public deleteProject(location: string): void {
-		this.shell.rm(location)
+		this.fs.removeDir(location)
 			.then(() => this.getProjects())
 			.catch(() => this.getProjects());
 	}
 
-	public clearProject(): void {
-		this.project$.complete();
-		this.project$ = new ReplaySubject<Project>();
+	public clearProject(project: string): void {
+		this.stopProject(project)
+			.then(() => {
+				this.project$.complete();
+				this.project$ = new ReplaySubject<Project>();
+			})
+			.catch(() => {
+				this.project$.complete();
+				this.project$ = new ReplaySubject<Project>();
+			});
 	}
 
 	public getWorkspace(path: string): any {
@@ -109,38 +117,77 @@ export class ProjectService {
 	}
 
 	public launchProject(project: string): Observable<RunningProcess> {
-		const buildUI = this.shell.run({
+		const closeStream$ = new Subject<boolean>();
+
+		const { exec$: buildUI } = this.shell.run({
 			cmd: 'ng build ui',
 			status: BuilderStatus.BUILD_UI.toString(),
 			cwd: project,
 		});
-		const runStyleguide = this.shell.run({
+		const { exec$: runStyleguide, pid: runStyleguidePid } = this.shell.run({
 			cmd: 'ng serve styleguide',
 			status: BuilderStatus.RUN_STYLEGUIDE.toString(),
 			cwd: project,
 		});
 
-		const watchUI = this.shell.run({
+		const { exec$: watchUI, pid: watchUIPid } = this.shell.run({
 			cmd: 'ng build ui --watch',
 			status: BuilderStatus.WATCH_UI.toString(),
 			cwd: project,
 		});
 
-		const launchBrowser = this.runner.launchBrowser({
+		const { exec$: launchBrowser$, pid: launchBrowserPid } = this.runner.launchBrowser({
 			type: BrowserType.CHROME,
 			url: 'http://localhost:4200', // TODO: get this dynamically
 		});
 
+		const launchBrowser = launchBrowser$.pipe(
+			finalize(() => {
+				this.stopProject(project);
+			}),
+		);
+
+		const waitForIt = this.shell.wait({
+			port: 4200,
+		});
+
+		this.pcs.set(project, {
+			pids: [ watchUIPid, runStyleguidePid, launchBrowserPid ],
+			close$: closeStream$,
+		});
+
 		return merge(
 			concat(buildUI, runStyleguide),
-			launchBrowser,
-			watchUI,
+			concat(waitForIt, merge(
+				launchBrowser,
+				watchUI,
+			)),
+		).pipe(
+			takeUntil(closeStream$),
 		);
 	}
 
-	public openInCode(path: string): void {
-		this.shell.exec(`code ${path}`)
-			.pipe(first())
-			.subscribe(() => console.log(`${path} has been opened in vscode`));
+	public stopProject(project: string): Promise<void> {
+		if (!this.pcs.has(project)) {
+			return Promise.resolve();
+		}
+
+		const { pids, close$ } = this.pcs.get(project);
+
+		return Promise.all(pids.map((pid: string) => this.shell.kill(pid)))
+			.then(() => {
+				close$.next(true);
+				close$.complete();
+			}).catch(() => {
+				// TODO: handle error
+				close$.next(true);
+				close$.complete();
+			});
+	}
+
+	public openInCode(path: string): Observable<any> {
+		const { exec$ } = this.shell.exec(`code ${path}`);
+
+		return exec$;
 	}
 }

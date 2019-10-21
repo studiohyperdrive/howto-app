@@ -1,13 +1,15 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class FileService {
+	private del;
 	private fs;
 	private path;
 
 	constructor() {
+		this.del = window.nw.require('del');
 		this.fs = window.nw.require('fs');
 		this.path = window.nw.require('path');
 	}
@@ -53,5 +55,11 @@ export class FileService {
 		}
 
 		return mkdirSync(path);
+	}
+
+	public removeDir(path: string): Promise<void> {
+		return this.del(path, {
+			force: true,
+		} as any);
 	}
 }
