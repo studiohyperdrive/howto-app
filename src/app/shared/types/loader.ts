@@ -1,9 +1,9 @@
 export enum LoaderType {
-	BOX,
-	CLOCK,
-	BARS,
-	WAVE,
-	DOTS,
-	SWIRL,
-	DONE,
+	BOX = 'BOX',
+	CLOCK = 'CLOCK',
+	BARS = 'BARS',
+	WAVE = 'WAVE',
+	DOTS = 'DOTS',
+	SWIRL = 'SWIRL',
+	DONE = 'DONE',
 }

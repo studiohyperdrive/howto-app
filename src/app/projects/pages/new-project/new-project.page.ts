@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -38,6 +38,7 @@ export class NewProjectPage implements OnInit, OnDestroy {
 		private builder: BuilderService,
 		private router: Router,
 		private route: ActivatedRoute,
+		private cdr: ChangeDetectorRef,
 	) {}
 
 	public ngOnInit(): void {
@@ -53,6 +54,8 @@ export class NewProjectPage implements OnInit, OnDestroy {
 			)
 			.subscribe((status: BuilderStatus) => {
 				this.status = status;
+
+				this.cdr.detectChanges(); // TODO: figure this zone mess out
 
 				if (status === BuilderStatus.DONE) {
 					setTimeout(() => {

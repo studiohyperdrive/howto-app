@@ -1,6 +1,7 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable, Inject, NgZone } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Observable, of, throwError, concat } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import { FileService } from '../../shared/services/file.service';
 import { ShellService } from '../../shared/services/shell.service';
@@ -16,6 +17,7 @@ export class BuilderService {
 		@Inject(DOCUMENT) private doc,
 		private shell: ShellService,
 		private fs: FileService,
+		private ngZone: NgZone,
 	) {
 		this.path = this.doc.defaultView.nw.require('path');
 		this.require = this.doc.defaultView.nw.require;
@@ -59,6 +61,8 @@ export class BuilderService {
 			generateStyleguide,
 			buildUI,
 			of(BuilderStatus.DONE),
+		).pipe(
+			filter((message: any) => !!BuilderStatus[message]),
 		);
 	}
 
@@ -118,12 +122,14 @@ export class BuilderService {
 	}
 
 	private run({ cmd, status, project }: { cmd: string; status: BuilderStatus; project?: string; }): Observable<BuilderStatus> {
-		const { exec$ } = this.shell.run<BuilderStatus>({
-			cmd,
-			status: status.toString(),
-			cwd: project,
-		});
+		return this.ngZone.run(() => {
+			const { exec$ } = this.shell.run<BuilderStatus>({
+				cmd,
+				status: status.toString(),
+				cwd: project,
+			});
 
-		return exec$;
+			return exec$;
+		});
 	}
 }

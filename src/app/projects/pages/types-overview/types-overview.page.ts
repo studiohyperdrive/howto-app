@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -28,6 +28,7 @@ export class TypesOverviewPage implements OnInit, OnDestroy {
 		private router: Router,
 		private route: ActivatedRoute,
 		private projectService: ProjectService,
+		private ngZone: NgZone,
 	) {}
 
 	public ngOnInit(): void {
@@ -123,7 +124,9 @@ export class TypesOverviewPage implements OnInit, OnDestroy {
 					this.deleting = true;
 					this.projectService.deleteProject(project.location)
 						.then(() => {
-							this.router.navigate(['/projects']);
+							this.ngZone.run(() => {
+								this.router.navigate(['/projects']);
+							});
 						})
 						.catch(() => {
 							this.deleting = false;
