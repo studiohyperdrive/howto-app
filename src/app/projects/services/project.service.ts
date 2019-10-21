@@ -8,7 +8,6 @@ import { FileService } from '../../shared/services/file.service';
 import { RunnerService } from '../../shared/services/runner.service';
 import { BrowserType, RunningProcess } from '../../shared/types/os';
 import { ShellService } from '../../shared/services/shell.service';
-import { tapInnerObserver } from '../../shared/utils/tap-inner-observer';
 
 @Injectable({
 	providedIn: 'root',
@@ -73,6 +72,12 @@ export class ProjectService {
 				},
 			});
 		}
+	}
+
+	public deleteProject(location: string): void {
+		this.fs.removeDir(location)
+			.then(() => this.getProjects())
+			.catch(() => this.getProjects());
 	}
 
 	public clearProject(project: string): void {

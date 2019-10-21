@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -7,6 +7,7 @@ import { takeUntil, filter } from 'rxjs/operators';
 import { DialogNewProjectComponent } from '../../components/new-project/new-project.component';
 import { ProjectService } from '../../services/project.service';
 import { Project } from '../../types/project';
+import { LoaderType } from '../../../shared/types/loader';
 
 @Component({
 	templateUrl: './projects-overview.page.html',
@@ -16,6 +17,8 @@ import { Project } from '../../types/project';
 })
 export class ProjectsOverviewPage implements OnInit, OnDestroy {
 	public projects: Project[] = [];
+	public loading = false;
+	public statusLoader: LoaderType = LoaderType.SWIRL;
 
 	private destroyed$: Subject<boolean> = new Subject<boolean>();
 
@@ -24,6 +27,7 @@ export class ProjectsOverviewPage implements OnInit, OnDestroy {
 		private router: Router,
 		private route: ActivatedRoute,
 		private projectService: ProjectService,
+		private cdr: ChangeDetectorRef
 	) {}
 
 	public ngOnInit(): void {
@@ -33,6 +37,11 @@ export class ProjectsOverviewPage implements OnInit, OnDestroy {
 			)
 			.subscribe((projects: Project[]) => {
 				this.projects = projects;
+
+				if (this.loading) {
+					this.loading = false;
+					this.cdr.detectChanges();
+				}
 			});
 
 		this.projectService.getProjects();
@@ -69,5 +78,10 @@ export class ProjectsOverviewPage implements OnInit, OnDestroy {
 
 	public handleProjectClicked(project: Project): void {
 		this.projectService.openInCode(project.location).subscribe();
+	}
+
+	public handleProjectDeleted(project: Project): void {
+		this.loading = true;
+		this.projectService.deleteProject(project.location);
 	}
 }

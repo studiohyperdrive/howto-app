@@ -1,14 +1,29 @@
-<div class="flex-grid projects-overview">
-	<div class="flex-grid__item" *ngFor="let project of projects">
-		<howto-project-card [project]="project" (clicked)="handleProjectClicked($event)"></howto-project-card>
-	</div>
-</div>
-
-<div class="flex-grid flex-grid--centered">
-  <div class="flex-grid__item">
-    <button mat-raised-button color="primary" (click)="addProject()">
-      <mat-icon>add</mat-icon>
-      Add Project
-    </button>
+<ng-container *ngIf="!loading; else deletingTpl">
+  <div class="flex-grid projects-overview">
+    <div class="flex-grid__item" *ngFor="let project of projects">
+      <howto-project-card
+        [project]="project"
+        (clicked)="handleProjectClicked($event)"
+        (deleted)="handleProjectDeleted($event)"
+      ></howto-project-card>
+    </div>
   </div>
-</div>
+  
+  <div class="flex-grid flex-grid--centered">
+    <div class="flex-grid__item">
+      <button mat-raised-button color="primary" (click)="addProject()">
+        <mat-icon>add</mat-icon>
+        Add Project
+      </button>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #deletingTpl>
+  <div class="flex-grid flex-grid--centered">
+    <div class="flex-grid__item">
+      <p class="mat-body">Deleting the project...</p>
+      <howto-loader [type]="statusLoader"></howto-loader>
+    </div>
+  </div>
+</ng-template>
