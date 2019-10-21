@@ -130,4 +130,8 @@ export class ProjectService {
 			watchUI,
 		);
 	}
+
+	public openComponent(path: string): Observable<any>  {
+		return this.shell.exec(`code ${path}`);
+	}
 }
