@@ -2,18 +2,23 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil, filter, first } from 'rxjs/operators';
+import { takeUntil, filter } from 'rxjs/operators';
 
+import { BuilderType } from '../../../builder/builder.types';
+import { DialogDeleteProjectComponent } from '../../components/delete-project/delete-project.component';
 import { DialogNewTypeComponent } from '../../components/new-type/new-type.component';
 import { ProjectService } from '../../services/project.service';
 import { Project, UiComponent } from '../../types/project';
-import { BuilderType } from 'src/app/builder/builder.types';
 
 @Component({
 	templateUrl: './types-overview.page.html',
+	styleUrls: [
+		'./types-overview.page.scss',
+	],
 })
 export class TypesOverviewPage implements OnInit, OnDestroy {
 	public types = [];
+	public deleting = false;
 
 	private project: Project;
 	private destroyed$: Subject<boolean> = new Subject<boolean>();
@@ -102,5 +107,28 @@ export class TypesOverviewPage implements OnInit, OnDestroy {
 
 	public handleTypeClicked(type: UiComponent): void {
 		this.projectService.openInCode(type.location).subscribe();
+	}
+
+	public handleProjectDeleted(project: Project): void {
+		const dialogRef = this.dialog.open(DialogDeleteProjectComponent, {
+			width: '400px',
+		});
+
+		dialogRef.afterClosed()
+			.pipe(
+				takeUntil(this.destroyed$),
+			)
+			.subscribe((shouldDelete: boolean) => {
+				if (shouldDelete) {
+					this.deleting = true;
+					this.projectService.deleteProject(project.location)
+						.then(() => {
+							this.router.navigate(['/projects']);
+						})
+						.catch(() => {
+							this.deleting = false;
+						});
+				}
+			});
 	}
 }

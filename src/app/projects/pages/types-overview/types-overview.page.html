@@ -1,19 +1,18 @@
-<mat-tab-group dynamicHeight>
+<mat-tab-group dynamicHeight *ngIf="!deleting; else deletingTpl">
   <mat-tab label="Overview">
-      <div class="flex-grid flex-grid--centered">
-        <div class="flex-grid__item">
-          <mat-card>
-            <mat-form-field appearance="outline" title="Not editable in demo version!">
-                <mat-label>Folder location</mat-label>
-                <input matInput [value]="project?.location" readonly />
-            </mat-form-field>
+    <mat-card>
+      <mat-card-content>
+        <mat-form-field appearance="outline" title="Not editable in demo version!">
+          <mat-label>Folder location</mat-label>
+          <input matInput [value]="project?.location" readonly />
+        </mat-form-field>
+      </mat-card-content>
 
-            <div>
-                <button mat-raised-button color="primary" (click)="handleProjectClicked(project)">Open in Visual Studio Code</button>
-            </div>
-          </mat-card>
-        </div>
-      </div>
+      <mat-card-actions class="overview-actions">
+        <button mat-raised-button color="primary" (click)="handleProjectClicked(project)">Open in Visual Studio Code</button>
+		    <button mat-flat-button color="warn" (click)="handleProjectDeleted(project)">Delete</button>
+      </mat-card-actions>
+    </mat-card>
   </mat-tab>
   <ng-container *ngFor="let type of types">
     <mat-tab [label]="type.title">
@@ -21,7 +20,7 @@
         <div class="flex-grid__item" *ngFor="let item of type.items">
           <howto-type-card [type]="item" (clicked)="handleTypeClicked($event)"></howto-type-card>
         </div>
-  
+
         <div class="flex-grid__item" *ngIf="!type.items.length">
           <mat-card class="type-card">
             <mat-card-content>
@@ -29,7 +28,7 @@
             </mat-card-content>
           </mat-card>
         </div>
-  
+
         <div class="flex-grid__item">
           <button mat-raised-button color="primary" (click)="addType(type.type)">
             <mat-icon>add</mat-icon>
@@ -40,3 +39,12 @@
     </mat-tab>
   </ng-container>
 </mat-tab-group>
+
+<ng-template #deletingTpl>
+  <div class="flex-grid flex-grid--centered">
+    <div class="flex-grid__item">
+      <p class="mat-body">Deleting the project...</p>
+      <howto-loader></howto-loader>
+    </div>
+  </div>
+</ng-template>

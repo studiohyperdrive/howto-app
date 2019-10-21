@@ -11,7 +11,5 @@
 	</mat-card-content>
 	<mat-card-actions>
 		<a [routerLink]="['/projects', project.name]" mat-stroked-button>Details</a>
-		<button mat-stroked-button (click)="clicked.emit(project)">Edit</button>
-		<button mat-flat-button color="warn" (click)="deleted.emit(project)">Delete</button>
 	</mat-card-actions>
 </mat-card>

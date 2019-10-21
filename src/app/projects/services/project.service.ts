@@ -74,8 +74,8 @@ export class ProjectService {
 		}
 	}
 
-	public deleteProject(location: string): void {
-		this.fs.removeDir(location)
+	public deleteProject(location: string): Promise<void> {
+		return this.fs.removeDir(location)
 			.then(() => this.getProjects())
 			.catch(() => this.getProjects());
 	}
