@@ -1,7 +1,7 @@
 import { Injectable, Inject, NgZone } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { Observable, of, throwError, concat } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { Observable, of, throwError, concat, Subscriber } from 'rxjs';
+import { filter, first } from 'rxjs/operators';
 
 import { FileService } from '../../shared/services/file.service';
 import { ShellService } from '../../shared/services/shell.service';
@@ -24,7 +24,7 @@ export class BuilderService {
 		this.root = this.path.join(this.require('os').homedir(), 'Projects');
 	}
 
-	public setupProject(name: string): Observable<BuilderStatus> {
+	public setupProject(name: string, description: string): Observable<BuilderStatus> {
 		if (!this.fs.makeDir(this.root)) {
 			return throwError(BuilderStatus.MKDIR_FAILED);
 		}
@@ -33,6 +33,7 @@ export class BuilderService {
 			cmd: `ng new ${name} --routing true --style scss --skipInstall true --defaults true`,
 			status: BuilderStatus.INIT_APP,
 		});
+		const updateDescription = this.updateProjectDescription(name, description);
 		const installDependencies = this.run({
 			cmd: 'npm install --silent',
 			status: BuilderStatus.INSTALLING_PACKAGES,
@@ -56,6 +57,7 @@ export class BuilderService {
 
 		return concat(
 			generateApp,
+			updateDescription,
 			installDependencies,
 			installSchematics,
 			generateStyleguide,
@@ -118,6 +120,8 @@ export class BuilderService {
 			generateType,
 			buildUI,
 			of(BuilderStatus.DONE),
+		).pipe(
+			filter((message: any) => !!BuilderStatus[message]),
 		);
 	}
 
@@ -130,6 +134,39 @@ export class BuilderService {
 			});
 
 			return exec$;
+		});
+	}
+
+	private updateProjectDescription(project: string, description: string): Observable<any> {
+		return new Observable((subscriber) => {
+			const packageJsonLocation = this.path.join(this.root, project, 'package.json');
+
+			if (!this.fs.pathExists(packageJsonLocation)) {
+				subscriber.error(`Could not find package.json in "${packageJsonLocation}"!`);
+				subscriber.complete();
+
+				return;
+			}
+
+			const packageJson = this.fs.readFile(packageJsonLocation, { json: true });
+
+			this.fs.writeFile(packageJsonLocation, {
+				...packageJson,
+				description,
+			}, { json: true })
+				.pipe(
+					first(),
+				)
+				.subscribe(
+					(result) => {
+						subscriber.next(result);
+						subscriber.complete();
+					},
+					(err) => {
+						subscriber.error(err);
+						subscriber.complete();
+					}
+				);
 		});
 	}
 }

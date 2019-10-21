@@ -1,0 +1,6 @@
+<mat-list>
+  <mat-list-item *ngIf="!dependencyList.length">No dependencies found.</mat-list-item>
+  <mat-list-item *ngFor="let dependency of dependencyList">
+    <p>{{ dependency.name }}: <code>{{ dependency.version }}</code></p>
+  </mat-list-item>
+</mat-list>

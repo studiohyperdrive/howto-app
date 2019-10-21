@@ -49,6 +49,9 @@ export class ProjectService {
 				...acc,
 				{
 					name: workspace.defaultProject,
+					description: workspace.description,
+					version: workspace.version,
+					keywords: workspace.keywords,
 					location: path,
 				},
 			];
@@ -65,6 +68,10 @@ export class ProjectService {
 			this.project$.next({
 				name: workspace.defaultProject,
 				location: projectLocation,
+				description: workspace.description,
+				version: workspace.version,
+				keywords: workspace.keywords,
+				dependencies: workspace.dependencies,
 				types: {
 					atoms: this.getTypes({ path: projectLocation, workspace, type: BuilderType.atom }),
 					molecules: this.getTypes({ path: projectLocation, workspace, type: BuilderType.molecule }),
@@ -94,7 +101,16 @@ export class ProjectService {
 	}
 
 	public getWorkspace(path: string): any {
-		return this.fs.readFile(this.path.join(path, 'angular.json'), { json: true });
+		const packageJson = this.fs.readFile(this.path.join(path, 'package.json'), { json: true }) || {};
+		const angularJson = this.fs.readFile(this.path.join(path, 'angular.json'), { json: true }) || {};
+
+		return {
+			...angularJson,
+			description: packageJson.description,
+			version: packageJson.version,
+			dependencies: packageJson.dependencies,
+			keywords: (packageJson.keywords || []).join(', '),
+		};
 	}
 
 	public getTypes({ path, type, workspace }: { path: string; type: BuilderType; workspace: any; }): UiComponent[] {

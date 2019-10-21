@@ -2,12 +2,11 @@
 	<img mat-card-image src="https://picsum.photos/300/240">
 	<mat-card-header>
 		<mat-card-title>{{ project.name | titlecase }}</mat-card-title>
-		<mat-card-subtitle>Get this from package.json?</mat-card-subtitle>
+		<mat-card-subtitle>{{ project.version }}</mat-card-subtitle>
 	</mat-card-header>
 	<mat-card-content>
-		<p>
-      Get this from package.json?
-		</p>
+    <p>{{ project.description || 'Missing description' }}</p>
+    <small>{{ project.keywords }}</small>
 	</mat-card-content>
 	<mat-card-actions>
 		<a [routerLink]="['/projects', project.name]" mat-stroked-button>Details</a>

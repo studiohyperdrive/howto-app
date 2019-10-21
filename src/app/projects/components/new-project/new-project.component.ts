@@ -32,6 +32,10 @@ export class DialogNewProjectComponent implements OnInit, OnDestroy {
 				Validators.required,
 				this.projectDoesNotExist(),
 			]),
+			type: new FormControl('atomic', [
+				Validators.required,
+			]),
+			description: new FormControl(''),
 		});
 
 		this.newProjectForm.get('name').valueChanges
@@ -53,7 +57,12 @@ export class DialogNewProjectComponent implements OnInit, OnDestroy {
 	}
 
 	public handleFormSubmit(): void {
-		this.dialogRef.close(slugify(this.newProjectForm.value.name));
+		const values = this.newProjectForm.value;
+
+		this.dialogRef.close({
+			...values,
+			name: slugify(values.name),
+		});
 	}
 
 	private projectDoesNotExist(): ValidatorFn {

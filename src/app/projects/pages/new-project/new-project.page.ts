@@ -43,13 +43,13 @@ export class NewProjectPage implements OnInit, OnDestroy {
 	) {}
 
 	public ngOnInit(): void {
-		const projectName = this.route.snapshot.queryParams.projectName;
+		const { projectName, projectDescription } = this.route.snapshot.queryParams;
 
 		if (!projectName) {
 			return;
 		}
 
-		this.builder.setupProject(projectName)
+		this.builder.setupProject(projectName, projectDescription)
 			.pipe(
 				takeUntil(this.destroyed$),
 			)

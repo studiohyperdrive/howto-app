@@ -9,10 +9,16 @@ export interface UiComponent {
 export interface Project {
 	name: string;
 	location: string;
+	description?: string;
+	version?: string;
+	keywords?: string;
 	types?: {
 		atoms?: UiComponent[];
 		molecules?: UiComponent[];
 		organisms?: UiComponent[];
 		pages?: UiComponent[];
+	};
+	dependencies?: {
+		[key: string]: string;
 	};
 }

@@ -1,16 +1,40 @@
 <mat-tab-group dynamicHeight *ngIf="!deleting; else deletingTpl">
   <mat-tab label="Overview">
     <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ project.name | titlecase }}</mat-card-title>
+        <mat-card-subtitle>{{ project.version }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="u-margin-bottom">
+          <p>{{ project.description || 'Missing description' }}</p>
+          <small>{{ project.keywords }}</small>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Dependencies</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <howto-dependencies [dependencies]="project.dependencies"></howto-dependencies>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Project info</mat-card-title>
+      </mat-card-header>
       <mat-card-content>
         <mat-form-field appearance="outline" title="Not editable in demo version!" class="u-full-width">
           <mat-label>Folder location</mat-label>
           <input matInput [value]="project?.location" readonly />
         </mat-form-field>
       </mat-card-content>
-
       <mat-card-actions class="overview-actions">
         <button mat-raised-button color="primary" (click)="handleProjectClicked(project)">Open in Visual Studio Code</button>
-		    <button mat-flat-button color="warn" (click)="handleProjectDeleted(project)">Delete</button>
+        <button mat-flat-button color="warn" (click)="handleProjectDeleted(project)">Delete</button>
       </mat-card-actions>
     </mat-card>
   </mat-tab>

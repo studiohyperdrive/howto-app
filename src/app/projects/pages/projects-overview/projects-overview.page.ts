@@ -54,7 +54,6 @@ export class ProjectsOverviewPage implements OnInit, OnDestroy {
 
 	public addProject(): void {
 		const dialogRef = this.dialog.open(DialogNewProjectComponent, {
-			height: '300px',
 			width: '400px',
 			data: {
 				projects: this.projects.map((project: Project) => project.name),
@@ -66,11 +65,13 @@ export class ProjectsOverviewPage implements OnInit, OnDestroy {
 				takeUntil(this.destroyed$),
 				filter((projectName: string) => !!projectName),
 			)
-			.subscribe((projectName: string) => {
+			.subscribe((values: any) => {
 				this.router.navigate(['.', 'new'], {
 					relativeTo: this.route,
 					queryParams: {
-						projectName,
+						projectName: values.name,
+						projectType: values.type,
+						projectDescription: values.description,
 					},
 				});
 			});
