@@ -1,13 +1,13 @@
-<div class="flex-grid flex-grid--stretched">
-  <div class="flex-grid__header">
-    <h2 class="mat-h2">File system</h2>
-  </div>
-
-  <div class="flex-grid__item">
-    <mat-form-field appearance="outline" title="Not editable in demo version!">
-      <mat-label>Project folder location</mat-label>
-      <input matInput [formControl]="location" readonly />
-      <mat-hint align="start">Defaults to ~/Projects</mat-hint>
-    </mat-form-field>
-  </div>
-</div>
+<mat-tab-group dynamicHeight>
+  <mat-tab label="File system">
+    <mat-card>
+      <mat-card-content>
+        <mat-form-field appearance="outline" title="Not editable in demo version!" class="u-full-width">
+          <mat-label>Project folder location</mat-label>
+          <input matInput [formControl]="location" readonly />
+          <mat-hint align="start">Defaults to ~/Projects</mat-hint>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+  </mat-tab>
+</mat-tab-group>

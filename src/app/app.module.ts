@@ -4,9 +4,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { AppComponent } from './app.component';
-import { RoutingModule } from './routing/routing.module';
+import { AppRoutingModule } from './app-routing.module';
 import { CoreModule } from './core/core.module';
 import { BuilderModule } from './builder/builder.module';
+import { ProjectsModule } from './projects/projects.module';
+import { SettingsModule } from './settings/settings.module';
 
 @NgModule({
 	declarations: [
@@ -15,10 +17,12 @@ import { BuilderModule } from './builder/builder.module';
 	imports: [
 		BrowserModule,
 		BrowserAnimationsModule,
-		RoutingModule,
 		MatSidenavModule,
 		CoreModule,
 		BuilderModule,
+		ProjectsModule,
+		SettingsModule,
+		AppRoutingModule,
 	],
 	providers: [],
 	bootstrap: [AppComponent]

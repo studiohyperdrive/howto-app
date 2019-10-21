@@ -10,18 +10,18 @@ import { TypeDetailPage } from './pages/type-detail/type-detail.page';
 
 const routes: Routes = [
 	{
-		path: '',
+		path: 'projects',
 		component: ProjectsOverviewPage,
 	},
 	{
-		path: 'new',
+		path: 'projects/new',
 		component: NewProjectPage,
 		data: {
 			title: 'Creating New Project',
 		},
 	},
 	{
-		path: ':project',
+		path: 'projects/:project',
 		component: ProjectDetailPage,
 		children: [
 			{

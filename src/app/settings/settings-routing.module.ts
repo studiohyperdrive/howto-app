@@ -5,13 +5,13 @@ import { SettingsOverviewPage } from './pages/settings-overview/settings-overvie
 
 const routes: Routes = [
 	{
-		path: '',
+		path: 'settings',
 		component: SettingsOverviewPage,
 	}
 ];
 
 @NgModule({
-	imports: [RouterModule.forChild(routes)],
+	imports: [RouterModule.forRoot(routes)],
 	exports: [RouterModule]
 })
 export class SettingsRoutingModule { }
