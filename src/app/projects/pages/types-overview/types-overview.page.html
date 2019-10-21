@@ -1,11 +1,19 @@
 <mat-tab-group dynamicHeight>
   <mat-tab label="Overview">
-      <div class="flex-grid__item">
-          <mat-form-field appearance="outline" title="Not editable in demo version!">
-              <mat-label>Folder location</mat-label>
-              <input matInput [value]="project?.location" readonly />
-          </mat-form-field>
+      <div class="flex-grid flex-grid--centered">
+        <div class="flex-grid__item">
+          <mat-card>
+            <mat-form-field appearance="outline" title="Not editable in demo version!">
+                <mat-label>Folder location</mat-label>
+                <input matInput [value]="project?.location" readonly />
+            </mat-form-field>
+
+            <div>
+                <button mat-raised-button color="primary" (click)="handleProjectClicked(project)">Open in Visual Studio Code</button>
+            </div>
+          </mat-card>
         </div>
+      </div>
   </mat-tab>
   <ng-container *ngFor="let type of types">
     <mat-tab [label]="type.title">
