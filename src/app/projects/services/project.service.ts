@@ -75,9 +75,16 @@ export class ProjectService {
 		}
 	}
 
-	public clearProject(): void {
-		this.project$.complete();
-		this.project$ = new ReplaySubject<Project>();
+	public clearProject(project: string): void {
+		this.stopProject(project)
+			.then(() => {
+				this.project$.complete();
+				this.project$ = new ReplaySubject<Project>();
+			})
+			.catch(() => {
+				this.project$.complete();
+				this.project$ = new ReplaySubject<Project>();
+			});
 	}
 
 	public getWorkspace(path: string): any {
@@ -155,14 +162,14 @@ export class ProjectService {
 		);
 	}
 
-	public stopProject(project: string): void {
+	public stopProject(project: string): Promise<void> {
 		if (!this.pcs.has(project)) {
-			return;
+			return Promise.resolve();
 		}
 
 		const { pids, close$ } = this.pcs.get(project);
 
-		Promise.all(pids.map((pid: string) => this.shell.kill(pid)))
+		return Promise.all(pids.map((pid: string) => this.shell.kill(pid)))
 			.then(() => {
 				close$.next(true);
 				close$.complete();

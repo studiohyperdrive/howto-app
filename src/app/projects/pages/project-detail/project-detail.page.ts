@@ -47,14 +47,14 @@ export class ProjectDetailPage implements OnInit, OnDestroy {
 		this.destroyed$.next(true);
 		this.destroyed$.complete();
 
-		this.projectService.clearProject();
+		this.projectService.clearProject(this.project.name);
 	}
 
 	private launchProject(): Observable<RunningProcess> {
 		return this.projectService.launchProject(this.project.name);
 	}
 
-	private stopProject(): void {
+	private stopProject(): Promise<void> {
 		return this.projectService.stopProject(this.project.name);
 	}
 }
