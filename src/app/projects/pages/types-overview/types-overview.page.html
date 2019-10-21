@@ -1,4 +1,12 @@
 <mat-tab-group dynamicHeight>
+  <mat-tab label="Overview">
+      <div class="flex-grid__item">
+          <mat-form-field appearance="outline" title="Not editable in demo version!">
+              <mat-label>Folder location</mat-label>
+              <input matInput [value]="project?.location" readonly />
+          </mat-form-field>
+        </div>
+  </mat-tab>
   <ng-container *ngFor="let type of types">
     <mat-tab [label]="type.title">
       <ng-template matTabContent>
