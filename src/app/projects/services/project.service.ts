@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ReplaySubject, Observable, merge, concat, Subject } from 'rxjs';
-import { first, finalize, takeUntil } from 'rxjs/operators';
+import { ReplaySubject, Observable, merge, concat, Subject, throwError, of, combineLatest } from 'rxjs';
+import { first, finalize, takeUntil, map } from 'rxjs/operators';
 
 import { Project, UiComponent } from '../types/project';
 import { BuilderType, BuilderStatus } from '../../builder/builder.types';
@@ -8,6 +8,7 @@ import { FileService } from '../../shared/services/file.service';
 import { RunnerService } from '../../shared/services/runner.service';
 import { BrowserType, RunningProcess } from '../../shared/types/os';
 import { ShellService } from '../../shared/services/shell.service';
+import { FileType, TypeAssets, TypeAsset } from 'src/app/shared/types/file';
 
 @Injectable({
 	providedIn: 'root',
@@ -189,5 +190,56 @@ export class ProjectService {
 		const { exec$ } = this.shell.exec(`code ${path}`);
 
 		return exec$;
+	}
+
+	public getTypeAssets(type: UiComponent): Observable<TypeAssets> {
+		if (!this.fs.pathExists(type.location)) {
+			return throwError(`Component does not exist (searched "${type.location}"!`);
+		}
+
+		const locationContents = this.fs.readDir(type.location);
+
+		return of(locationContents.reduce((acc, curr) => {
+			const fileType = this.fs.getFileType(curr);
+
+			if (fileType === FileType.unknown) {
+				return acc;
+			}
+
+			const contents = this.fs.readFile(curr);
+
+			return {
+				...acc,
+				[fileType]: contents,
+			};
+		}, {}));
+	}
+
+	public updateTypeAssets(type: UiComponent, assets: TypeAssets): Observable<TypeAssets> {
+		if (!this.fs.pathExists(type.location)) {
+			return throwError(`Component does not exist (searched "${type.location}"!`);
+		}
+
+		return combineLatest(Object.keys(assets).map((asset: FileType) => this.updateAsset(type.location, asset, assets[asset])))
+			.pipe(
+				map((updated: TypeAsset[]) => updated.reduce((acc, curr) => ({
+					...acc,
+					[curr.type]: curr.content,
+				}), {})),
+			);
+	}
+
+	public updateAsset(path: string, type: FileType, content: string): Observable<TypeAsset> {
+		const pathContents = this.fs.readDir(path);
+
+		const assetLocation = pathContents.find((file: string) => this.fs.getFileType(file) === type);
+
+		return this.fs.writeFile(assetLocation, content)
+			.pipe(
+				map((updatedContent: string) => ({
+					content: updatedContent,
+					type,
+				})),
+			);
 	}
 }

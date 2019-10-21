@@ -1,14 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-// import { MatDialog } from '@angular/material/dialog';
-// import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
+import { takeUntil, map, switchMap, tap } from 'rxjs/operators';
 
-// import { ProjectService } from '../../services/project.service';
 import { UiComponent, Project } from '../../types/project';
-import { component } from './mocks/component';
-import { template } from './mocks/template';
-import { styling } from './mocks/styling';
-// import { takeUntil } from 'rxjs/operators';
+import { ProjectService } from '../../services/project.service';
+import { TypeAssets } from '../../../shared/types/file';
+import { isNil } from '../../../shared/utils/is-nil';
 
 const EDITOR_THEME = 'vs-dark';
 
@@ -26,38 +24,76 @@ export class TypeDetailPage implements OnInit, OnDestroy {
 	public componentEditor = {
 		theme: EDITOR_THEME,
 		language: 'typescript',
-		content: component,
+		content: null,
+		enabled: false,
 	};
 
 	public templateEditor = {
 		theme: EDITOR_THEME,
 		language: 'html',
-		content: template,
+		content: null,
+		enabled: false,
 	};
 
-	public stylingEditor = {
+	public stylesEditor = {
 		theme: EDITOR_THEME,
 		language: 'scss',
-		content: styling,
+		content: null,
+		enabled: false,
 	};
 
 	constructor(
-		// private dialog: MatDialog,
-		// private router: Router,
-		// private route: ActivatedRoute,
-		// private projectService: ProjectService,
+		private route: ActivatedRoute,
+		private projectService: ProjectService,
 	) {}
 
 	public ngOnInit(): void {
-		// this.projectService.project$
-		// 	.pipe(takeUntil(this.destroyed$))
-		// 	.subscribe((project: Project) => {
-		// 		debugger;
-		// 	});
+		this.projectService.project$
+			.pipe(
+				takeUntil(this.destroyed$),
+				map((project: Project) => project.types[`${this.route.snapshot.params.type}s`]),
+				map((types: UiComponent[]) => types.find((type: UiComponent) => type.name === this.route.snapshot.params.id)),
+				tap((type: UiComponent) => {
+					this.type = type;
+				}),
+				switchMap((type: UiComponent) => this.projectService.getTypeAssets(type)),
+			)
+			.subscribe((assets: TypeAssets) => {
+				this.updateAssets(assets);
+			});
 	}
 
 	public ngOnDestroy(): void {
 		this.destroyed$.next(true);
 		this.destroyed$.complete();
+	}
+
+	public saveType(): void {
+		this.projectService.updateTypeAssets(this.type, {
+			component: this.componentEditor.content,
+			styles: this.stylesEditor.content,
+			template: this.templateEditor.content,
+		}).pipe(
+			takeUntil(this.destroyed$),
+		).subscribe((assets: TypeAssets) => {
+			this.updateAssets(assets);
+		});
+	}
+
+	private updateAssets({ component, styles, template }: TypeAssets): void {
+		if (!isNil(component)) {
+			this.componentEditor.content = component;
+			this.componentEditor.enabled = true;
+		}
+
+		if (!isNil(styles)) {
+			this.stylesEditor.content = styles;
+			this.stylesEditor.enabled = true;
+		}
+
+		if (!isNil(template)) {
+			this.templateEditor.content = template;
+			this.templateEditor.enabled = true;
+		}
 	}
 }

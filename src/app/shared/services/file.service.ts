@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 
+import { FileType } from '../types/file';
+import { Observable, Subscriber } from 'rxjs';
+
 @Injectable({
 	providedIn: 'root',
 })
@@ -59,5 +62,45 @@ export class FileService {
 
 	public removeDir(path: string): Promise<void> {
 		return this.trash(path);
+	}
+
+	public getFileType(path: string): FileType {
+		const extension = this.path.extname(path);
+		const isUnitTest = (file) => file.includes('.spec') || file.includes('test');
+
+		switch (extension) {
+			case '.css':
+			case '.scss':
+			case '.sass':
+				return FileType.styles;
+			case '.html':
+			case '.html':
+				return FileType.template;
+			case '.ts':
+				return isUnitTest(path) ? FileType.unknown : FileType.component;
+			default:
+				return FileType.unknown;
+		}
+	}
+
+	public writeFile(path: string, contents: string, { json = false }: { json?: boolean } = {}): Observable<string> {
+		return new Observable((subscriber: Subscriber<any>) => {
+			if (!this.pathExists(path)) {
+				subscriber.error(`Path does not exist (${path})!`);
+				subscriber.complete();
+
+				return;
+			}
+
+			try {
+				this.fs.writeFileSync(path, json ? JSON.stringify(contents, null, 2) : contents, { encoding: 'UTF-8' });
+
+				subscriber.next(this.readFile(path, { json }));
+				subscriber.complete();
+			} catch (e) {
+				subscriber.error(e);
+				subscriber.complete();
+			}
+		});
 	}
 }
