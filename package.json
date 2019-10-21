@@ -18,8 +18,8 @@
   "main": "http://localhost:8964",
   "node-remote": "http://localhost:8964",
   "window": {
-    "width": 960,
-    "height": 600,
+    "width": 1920,
+    "height": 1080,
     "min_width": 700,
     "min_height": 500,
     "icon": "assets/icon.png"
@@ -47,6 +47,7 @@
     "chrome-launcher": "0.11.2",
     "execa": "3.2.0",
     "hammerjs": "^2.0.8",
+    "ngx-monaco-editor": "8.1.0",
     "tslib": "^1.10.0"
   },
   "devDependencies": {

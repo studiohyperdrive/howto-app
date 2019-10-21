@@ -2,11 +2,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil, filter, first } from 'rxjs/operators';
 
 import { DialogNewTypeComponent } from '../../components/new-type/new-type.component';
 import { ProjectService } from '../../services/project.service';
-import { Project } from '../../types/project';
+import { Project, UiComponent } from '../../types/project';
 import { BuilderType } from 'src/app/builder/builder.types';
 
 @Component({
@@ -94,5 +94,9 @@ export class TypesOverviewPage implements OnInit, OnDestroy {
 					},
 				});
 			});
+	}
+
+	public handleTypeClicked(type: UiComponent): void {
+		this.projectService.openComponent(type.location);
 	}
 }
