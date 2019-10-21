@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil, first } from 'rxjs/operators';
@@ -33,7 +33,9 @@ export class NewTypePage implements OnInit, OnDestroy {
 		private builder: BuilderService,
 		private router: Router,
 		private route: ActivatedRoute,
-		private projectService: ProjectService
+		private projectService: ProjectService,
+		private cdr: ChangeDetectorRef,
+		private ngZone: NgZone,
 	) {}
 
 	public ngOnInit(): void {
@@ -55,12 +57,18 @@ export class NewTypePage implements OnInit, OnDestroy {
 			.subscribe((status: BuilderStatus) => {
 				this.status = status;
 
+				this.cdr.detectChanges();
+
 				if (status === BuilderStatus.DONE) {
 					this.projectService.getProject(project);
 
 					this.projectService.project$
 						.pipe(first())
-						.subscribe(() => this.router.navigate(['/projects', project]));
+						.subscribe(() => {
+							this.ngZone.run(() => {
+								this.router.navigate(['/projects', project]);
+							});
+						});
 				}
 			});
 	}
