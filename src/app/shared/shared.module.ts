@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 
@@ -39,6 +40,7 @@ import { ShellService } from './services/shell.service';
 		MatListModule,
 		MatProgressBarModule,
 		MatProgressSpinnerModule,
+		MatToolbarModule,
 		MatTabsModule,
 		MonacoEditorModule.forRoot(),
 	],
@@ -61,6 +63,7 @@ import { ShellService } from './services/shell.service';
 		MatListModule,
 		MatProgressBarModule,
 		MatProgressSpinnerModule,
+		MatToolbarModule,
 		MatTabsModule,
 		MonacoEditorModule,
 
