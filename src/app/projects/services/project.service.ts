@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ReplaySubject, Observable, merge, concat } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 import { Project, UiComponent } from '../types/project';
 import { BuilderType, BuilderStatus } from '../../builder/builder.types';
@@ -131,7 +132,9 @@ export class ProjectService {
 		);
 	}
 
-	public openComponent(path: string): Observable<any>  {
-		return this.shell.exec(`code ${path}`);
+	public openInCode(path: string): void {
+		this.shell.exec(`code ${path}`)
+			.pipe(first())
+			.subscribe(() => console.log(`${path} has been opened in vscode`));
 	}
 }
