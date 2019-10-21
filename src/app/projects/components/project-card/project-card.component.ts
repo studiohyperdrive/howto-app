@@ -10,4 +10,5 @@ import { Project } from '../../types/project';
 export class ProjectCardComponent {
 	@Input() public project: Project;
 	@Output() public clicked: EventEmitter<Project> = new EventEmitter<Project>();
+	@Output() public deleted: EventEmitter<Project> = new EventEmitter<Project>();
 }

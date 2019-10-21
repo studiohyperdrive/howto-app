@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, merge, of } from 'rxjs';
+import { Options } from 'del';
 
 @Injectable()
 export class ShellService {
@@ -8,6 +9,7 @@ export class ShellService {
 	private execa;
 	private path;
 	private process;
+	private del;
 
 	private root;
 
@@ -15,6 +17,7 @@ export class ShellService {
 		this.execa = window.nw.require('execa');
 		this.path = window.nw.require('path');
 		this.process = window.nw.require('process');
+		this.del = window.nw.require('del');
 
 		this.root = this.path.join(window.nw.require('os').homedir(), 'Projects');
 	}
@@ -56,6 +59,12 @@ export class ShellService {
 
 			return this.pcs.get(pid).kill();
 		});
+	}
+
+	public rm(path: string): Promise<any> {
+		return this.del(path, {
+			force: true,
+		} as Options);
 	}
 
 	private async runCommand(command: string, env: any, cwd: string): Promise<any> {

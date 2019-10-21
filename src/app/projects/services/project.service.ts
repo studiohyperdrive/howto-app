@@ -73,6 +73,12 @@ export class ProjectService {
 		}
 	}
 
+	public deleteProject(location: string): void {
+		this.shell.rm(location)
+			.then(() => this.getProjects())
+			.catch(() => this.getProjects());
+	}
+
 	public clearProject(): void {
 		this.project$.complete();
 		this.project$ = new ReplaySubject<Project>();
