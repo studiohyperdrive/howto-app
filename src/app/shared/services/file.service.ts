@@ -4,12 +4,12 @@ import { Injectable } from '@angular/core';
 	providedIn: 'root',
 })
 export class FileService {
-	private del;
+	private trash;
 	private fs;
 	private path;
 
 	constructor() {
-		this.del = window.nw.require('del');
+		this.trash = window.nw.require('trash');
 		this.fs = window.nw.require('fs');
 		this.path = window.nw.require('path');
 	}
@@ -58,8 +58,6 @@ export class FileService {
 	}
 
 	public removeDir(path: string): Promise<void> {
-		return this.del(path, {
-			force: true,
-		} as any);
+		return this.trash(path);
 	}
 }
