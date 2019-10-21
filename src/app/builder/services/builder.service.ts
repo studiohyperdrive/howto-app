@@ -118,10 +118,12 @@ export class BuilderService {
 	}
 
 	private run({ cmd, status, project }: { cmd: string; status: BuilderStatus; project?: string; }): Observable<BuilderStatus> {
-		return this.shell.run<BuilderStatus>({
+		const { exec$ } = this.shell.run<BuilderStatus>({
 			cmd,
 			status: status.toString(),
 			cwd: project,
 		});
+
+		return exec$;
 	}
 }

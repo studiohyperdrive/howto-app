@@ -68,6 +68,6 @@ export class ProjectsOverviewPage implements OnInit, OnDestroy {
 	}
 
 	public handleProjectClicked(project: Project): void {
-		this.projectService.openInCode(project.location);
+		this.projectService.openInCode(project.location).subscribe();
 	}
 }

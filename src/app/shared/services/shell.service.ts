@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, merge, of } from 'rxjs';
+import { Observable, merge, of, Subscriber } from 'rxjs';
 
 @Injectable()
 export class ShellService {
@@ -8,6 +8,7 @@ export class ShellService {
 	private execa;
 	private path;
 	private process;
+	private uuid;
 	private waitForLocalhost;
 
 	private root;
@@ -16,38 +17,68 @@ export class ShellService {
 		this.execa = window.nw.require('execa');
 		this.path = window.nw.require('path');
 		this.process = window.nw.require('process');
+		this.uuid = window.nw.require('uuid/v4');
 		this.waitForLocalhost = window.nw.require('wait-for-localhost');
 
 		this.root = this.path.join(window.nw.require('os').homedir(), 'Projects');
 	}
 
-	public run<T = any>({ cmd, status, cwd }: { cmd: string; status: string; cwd?: string; }): Observable<T> {
-		return merge(
-			of(status),
-			this.exec(cmd, {
-				cwd: cwd ? this.path.resolve(this.root, cwd) : this.root,
-			}),
-		);
+	public run<T = any>({ cmd, status, cwd }: { cmd: string; status: string; cwd?: string; }): { exec$: Observable<T>, pid: number; } {
+		const { pid, exec$ } = this.exec(cmd, {
+			cwd: cwd ? this.path.resolve(this.root, cwd) : this.root,
+		});
+
+		return {
+			pid,
+			exec$: merge(
+				of(status),
+				exec$,
+			),
+		};
 	}
 
-	public exec(command: string, { cwd }: { cwd?: string } = {}): Observable<any> {
-		return new Observable((subscriber) => {
-			const env = {
-				...this.process.env,
-				INIT_CWD: cwd,
-				PWD: cwd,
-				PATH: this.process.env.PATH.replace(this.path.join(this.process.cwd(), 'node_modules', '.bin'), ''),
-			};
+	public exec(command: string, { cwd }: { cwd?: string } = {}): { exec$: Observable<any>, pid: number; } {
+		const pid = this.uuid();
 
+		return {
+			pid,
+			exec$: new Observable((subscriber: Subscriber<any>) => {
+				const env = {
+					...this.process.env,
+					INIT_CWD: cwd,
+					PWD: cwd,
+					PATH: this.process.env.PATH.replace(this.path.join(this.process.cwd(), 'node_modules', '.bin'), ''),
+				};
 
-			this.runCommand(command, env, cwd).then((result) => {
-				subscriber.next(result);
-				subscriber.complete();
-			}).catch((err) => {
-				subscriber.error(err);
-				subscriber.complete();
-			});
-		});
+				const pcs = this.execa.command(command, { shell: true, cwd, env, extendEnv: false });
+
+				this.pcs.set(pid, pcs);
+
+				pcs.stdout.on('data', (message) => {
+					console.log(message.toString());
+					subscriber.next(message.toString());
+				});
+
+				pcs
+					.then(({ stdout, stderr }) => {
+						if (stderr) {
+							subscriber.error(stderr);
+						} else {
+							subscriber.next(stdout);
+						}
+
+						subscriber.complete();
+
+						this.pcs.delete(pid);
+					})
+					.catch((err) => {
+						subscriber.error(err);
+						subscriber.complete();
+
+						this.pcs.delete(pid);
+					});
+			}),
+		};
 	}
 
 	public wait({ port }: { port: number }): Observable<any> {
@@ -64,27 +95,17 @@ export class ShellService {
 	}
 
 	public kill(pid: string): Promise<void> {
-		return new Promise<void>((resolve, reject) => {
-			if (!this.pcs.has(pid)) {
-				return reject();
-			}
-
-			return this.pcs.get(pid).kill();
-		});
-	}
-
-	private async runCommand(command: string, env: any, cwd: string): Promise<any> {
-		const pcs = this.execa.command(command, { shell: true, cwd, env, extendEnv: false });
-		pcs.stdout.on('data', (message) => {
-			console.log(message.toString());
-		});
-
-		const { stdout, stderr } = await pcs;
-
-		if (stderr) {
-			return Promise.reject(stderr);
+		if (!this.pcs.has(pid)) {
+			return Promise.resolve();
 		}
 
-		return Promise.resolve(stdout);
+		try {
+			this.pcs.get(pid).kill();
+			this.pcs.delete(pid);
+
+			return Promise.resolve();
+		} catch (e) {
+			return Promise.reject(e);
+		}
 	}
 }

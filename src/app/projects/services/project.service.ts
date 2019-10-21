@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ReplaySubject, Observable, merge, concat } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { ReplaySubject, Observable, merge, concat, Subject } from 'rxjs';
+import { first, finalize, takeUntil } from 'rxjs/operators';
 
 import { Project, UiComponent } from '../types/project';
 import { BuilderType, BuilderStatus } from '../../builder/builder.types';
@@ -8,6 +8,7 @@ import { FileService } from '../../shared/services/file.service';
 import { RunnerService } from '../../shared/services/runner.service';
 import { BrowserType, RunningProcess } from '../../shared/types/os';
 import { ShellService } from '../../shared/services/shell.service';
+import { tapInnerObserver } from '../../shared/utils/tap-inner-observer';
 
 @Injectable({
 	providedIn: 'root',
@@ -103,18 +104,20 @@ export class ProjectService {
 	}
 
 	public launchProject(project: string): Observable<RunningProcess> {
-		const buildUI = this.shell.run({
+		const closeStream$ = new Subject<boolean>();
+
+		const { exec$: buildUI } = this.shell.run({
 			cmd: 'ng build ui',
 			status: BuilderStatus.BUILD_UI.toString(),
 			cwd: project,
 		});
-		const runStyleguide = this.shell.run({
+		const { exec$: runStyleguide, pid: runStyleguidePid } = this.shell.run({
 			cmd: 'ng serve styleguide',
 			status: BuilderStatus.RUN_STYLEGUIDE.toString(),
 			cwd: project,
 		});
 
-		const watchUI = this.shell.run({
+		const { exec$: watchUI, pid: watchUIPid } = this.shell.run({
 			cmd: 'ng build ui --watch',
 			status: BuilderStatus.WATCH_UI.toString(),
 			cwd: project,
@@ -123,7 +126,21 @@ export class ProjectService {
 		const launchBrowser = this.runner.launchBrowser({
 			type: BrowserType.CHROME,
 			url: 'http://localhost:4200', // TODO: get this dynamically
-		});
+		}).pipe(
+			finalize(() => {
+				Promise.all([
+					this.shell.kill(watchUIPid),
+					this.shell.kill(runStyleguidePid),
+				]).then(() => {
+					closeStream$.next(true);
+					closeStream$.complete();
+				}).catch(() => {
+					// TODO: handle error
+					closeStream$.next(true);
+					closeStream$.complete();
+				});
+			}),
+		);
 
 		const waitForIt = this.shell.wait({
 			port: 4200,
@@ -135,12 +152,14 @@ export class ProjectService {
 				launchBrowser,
 				watchUI,
 			)),
+		).pipe(
+			takeUntil(closeStream$),
 		);
 	}
 
-	public openInCode(path: string): void {
-		this.shell.exec(`code ${path}`)
-			.pipe(first())
-			.subscribe(() => console.log(`${path} has been opened in vscode`));
+	public openInCode(path: string): Observable<any> {
+		const { exec$ } = this.shell.exec(`code ${path}`);
+
+		return exec$;
 	}
 }
