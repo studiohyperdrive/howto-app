@@ -125,10 +125,16 @@ export class ProjectService {
 			url: 'http://localhost:4200', // TODO: get this dynamically
 		});
 
+		const waitForIt = this.shell.wait({
+			port: 4200,
+		});
+
 		return merge(
 			concat(buildUI, runStyleguide),
-			launchBrowser,
-			watchUI,
+			concat(waitForIt, merge(
+				launchBrowser,
+				watchUI,
+			)),
 		);
 	}
 

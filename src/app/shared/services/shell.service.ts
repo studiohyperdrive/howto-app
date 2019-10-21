@@ -8,6 +8,7 @@ export class ShellService {
 	private execa;
 	private path;
 	private process;
+	private waitForLocalhost;
 
 	private root;
 
@@ -15,6 +16,7 @@ export class ShellService {
 		this.execa = window.nw.require('execa');
 		this.path = window.nw.require('path');
 		this.process = window.nw.require('process');
+		this.waitForLocalhost = window.nw.require('wait-for-localhost');
 
 		this.root = this.path.join(window.nw.require('os').homedir(), 'Projects');
 	}
@@ -34,7 +36,7 @@ export class ShellService {
 				...this.process.env,
 				INIT_CWD: cwd,
 				PWD: cwd,
-				PATH: this.process.env.PATH.replace(`${this.process.cwd()}/node_modules/.bin`, ''),
+				PATH: this.process.env.PATH.replace(this.path.join(this.process.cwd(), 'node_modules', '.bin'), ''),
 			};
 
 
@@ -45,6 +47,19 @@ export class ShellService {
 				subscriber.error(err);
 				subscriber.complete();
 			});
+		});
+	}
+
+	public wait({ port }: { port: number }): Observable<any> {
+		return new Observable((subscriber) => {
+			this.waitForLocalhost({ port })
+				.then(() => {
+					subscriber.complete();
+				})
+				.catch((err) => {
+					subscriber.error(err);
+					subscriber.complete();
+				});
 		});
 	}
 
