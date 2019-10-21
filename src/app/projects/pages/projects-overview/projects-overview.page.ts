@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -27,6 +27,7 @@ export class ProjectsOverviewPage implements OnInit, OnDestroy {
 		private router: Router,
 		private route: ActivatedRoute,
 		private projectService: ProjectService,
+		private cdr: ChangeDetectorRef
 	) {}
 
 	public ngOnInit(): void {
@@ -36,7 +37,11 @@ export class ProjectsOverviewPage implements OnInit, OnDestroy {
 			)
 			.subscribe((projects: Project[]) => {
 				this.projects = projects;
-				this.loading = false;
+
+				if (this.loading) {
+					this.loading = false;
+					this.cdr.detectChanges();
+				}
 			});
 
 		this.projectService.getProjects();
