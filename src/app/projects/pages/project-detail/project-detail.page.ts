@@ -26,11 +26,13 @@ export class ProjectDetailPage implements OnInit, OnDestroy {
 	}
 
 	public ngOnInit(): void {
-		this.context.setAction({
-			name: 'launchStyleguideInBrowser',
-			exec: this.launchProject,
-			stop: this.stopProject,
-		});
+		if (this.route.snapshot.params.project) {
+			this.context.setAction({
+				name: 'launchStyleguideInBrowser',
+				exec: this.launchProject,
+				stop: this.stopProject,
+			});
+		}
 
 		this.projectService.project$
 			.pipe(
