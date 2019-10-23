@@ -1,4 +1,4 @@
-<mat-tab-group dynamicHeight>
+<mat-tab-group dynamicHeight (selectedTabChange)="handleTabChanged($event)">
   <mat-tab label="Overview">
     <mat-card>
       <mat-card-header>
@@ -51,7 +51,7 @@
 		</ng-template>
 	</mat-tab>
 </mat-tab-group>
-<mat-toolbar color="accent" class="bottom-toolbar">
+<mat-toolbar color="accent" class="bottom-toolbar" *ngIf="editorVisible">
   <mat-toolbar-row>
     <button mat-button (click)="saveType()">
       Save

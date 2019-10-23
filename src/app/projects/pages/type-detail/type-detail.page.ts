@@ -18,6 +18,7 @@ const EDITOR_THEME = 'vs-dark';
 })
 export class TypeDetailPage implements OnInit, OnDestroy {
 	public type: UiComponent;
+	public editorVisible = false;
 
 	private destroyed$: Subject<boolean> = new Subject<boolean>();
 
@@ -82,6 +83,10 @@ export class TypeDetailPage implements OnInit, OnDestroy {
 
 	public openInCode(): void {
 		this.projectService.openInCode(this.type.location).subscribe();
+	}
+
+	public handleTabChanged({ index }: { index: number; }): void {
+		this.editorVisible = index > 0;
 	}
 
 	private updateAssets({ component, styles, template }: TypeAssets): void {
