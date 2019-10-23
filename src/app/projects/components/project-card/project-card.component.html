@@ -5,7 +5,7 @@
 		<mat-card-subtitle>{{ project.version }}</mat-card-subtitle>
 	</mat-card-header>
 	<mat-card-content>
-    <p>{{ project.description || 'Missing description' }}</p>
+    <p>{{ project.description || 'Missing description' | slice:0:100}}<span *ngIf="project.description?.length > 1000">...</span></p>
     <small>{{ project.keywords }}</small>
 	</mat-card-content>
 	<mat-card-actions>
