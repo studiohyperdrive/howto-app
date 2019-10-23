@@ -7,6 +7,7 @@ import { BuilderService } from '../../../builder/services/builder.service';
 import { BuilderStatus } from '../../../builder/builder.types';
 import { LoaderType } from '../../../shared/types/loader';
 import { ProjectService } from '../../services/project.service';
+import { ContextService } from 'src/app/shared/services/context.service';
 
 @Component({
 	templateUrl: './new-type.page.html',
@@ -38,6 +39,7 @@ export class NewTypePage implements OnInit, OnDestroy {
 		private projectService: ProjectService,
 		private cdr: ChangeDetectorRef,
 		private ngZone: NgZone,
+		private context: ContextService,
 	) {}
 
 	public ngOnInit(): void {
@@ -52,6 +54,7 @@ export class NewTypePage implements OnInit, OnDestroy {
 			name,
 			type,
 			project,
+			build: !this.context.action.running,
 		})
 			.pipe(
 				takeUntil(this.destroyed$),

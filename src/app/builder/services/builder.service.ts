@@ -100,7 +100,17 @@ export class BuilderService {
 		});
 	}
 
-	public generateType({ name, type, project }: { name: string; type: BuilderType; project: string; }): Observable<BuilderStatus> {
+	public generateType({
+		name,
+		type,
+		project,
+		build = true,
+	}: {
+		name: string;
+		type: BuilderType;
+		project: string;
+		build?: boolean;
+	}): Observable<BuilderStatus> {
 		if (!this.fs.pathExists(name)) {
 			throwError(BuilderStatus.PROJECT_DOES_NOT_EXIST);
 		}
@@ -110,11 +120,11 @@ export class BuilderService {
 			status: BuilderStatus.INIT_COMPONENT,
 			project,
 		});
-		const buildUI = this.run({
+		const buildUI = build ? this.run({
 			cmd: `ng build ui`,
 			status: BuilderStatus.BUILD_UI,
 			project,
-		});
+		}) : of(null);
 
 		return concat(
 			generateType,

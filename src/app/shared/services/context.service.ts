@@ -12,6 +12,10 @@ export class ContextService {
 	public sidebarOpen$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	public action$: BehaviorSubject<ExecutableAction> = new BehaviorSubject(null);
 
+	public get action(): ExecutableAction {
+		return this.action$.getValue();
+	}
+
 	public setTitle(title: string): void {
 		this.title$.next(title);
 	}
