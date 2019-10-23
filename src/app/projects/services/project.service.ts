@@ -136,11 +136,6 @@ export class ProjectService {
 	public launchProject(project: string): Observable<RunningProcess> {
 		const closeStream$ = new Subject<boolean>();
 
-		const { exec$: buildUI } = this.shell.run({
-			cmd: 'ng build ui',
-			status: BuilderStatus.BUILD_UI.toString(),
-			cwd: project,
-		});
 		const { exec$: runStyleguide, pid: runStyleguidePid } = this.shell.run({
 			cmd: 'ng serve styleguide',
 			status: BuilderStatus.RUN_STYLEGUIDE.toString(),
@@ -174,7 +169,7 @@ export class ProjectService {
 		});
 
 		return merge(
-			concat(buildUI, runStyleguide),
+			runStyleguide,
 			concat(waitForIt, merge(
 				launchBrowser,
 				watchUI,
