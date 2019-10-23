@@ -8,6 +8,7 @@ import { DialogNewProjectComponent } from '../../components/new-project/new-proj
 import { ProjectService } from '../../services/project.service';
 import { Project } from '../../types/project';
 import { LoaderType } from '../../../shared/types/loader';
+import { ContextService } from 'src/app/shared/services/context.service';
 
 @Component({
 	templateUrl: './projects-overview.page.html',
@@ -27,10 +28,13 @@ export class ProjectsOverviewPage implements OnInit, OnDestroy {
 		private router: Router,
 		private route: ActivatedRoute,
 		private projectService: ProjectService,
-		private cdr: ChangeDetectorRef
+		private cdr: ChangeDetectorRef,
+		private context: ContextService,
 	) {}
 
 	public ngOnInit(): void {
+		this.context.clearAction();
+
 		this.projectService.projects$
 			.pipe(
 				takeUntil(this.destroyed$),

@@ -41,6 +41,15 @@ html, body {
   stroke: #fff !important;
 }
 
+.mat-card-header-text {
+  margin: 0 !important;
+}
+
+.mat-card-actions button,
+.mat-card-actions a {
+  margin: .5rem !important;
+}
+
 .u-full-width {
   width: 100%;
 }

@@ -1,4 +1,40 @@
 <mat-tab-group dynamicHeight>
+  <mat-tab label="Overview">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ type.name | titlecase }}</mat-card-title>
+      </mat-card-header>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ type.type | titlecase }} info</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                File system
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-list>
+              <mat-list-item>
+                <mat-icon mat-list-icon>folder</mat-icon>
+                <h4 mat-line>{{ type.location }}</h4>
+              </mat-list-item>
+            </mat-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-actions class="type-actions">
+        <button mat-raised-button color="primary" (click)="openInCode()">Open in Visual Studio Code</button>
+      </mat-card-actions>
+    </mat-card>
+  </mat-tab>
+
 	<mat-tab label="Component" *ngIf="componentEditor.enabled">
 		<ng-template matTabContent>
 			<ngx-monaco-editor class="editor" [options]="componentEditor" [(ngModel)]="componentEditor.content"></ngx-monaco-editor>

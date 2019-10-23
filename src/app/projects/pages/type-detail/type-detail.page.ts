@@ -80,6 +80,10 @@ export class TypeDetailPage implements OnInit, OnDestroy {
 		});
 	}
 
+	public openInCode(): void {
+		this.projectService.openInCode(this.type.location).subscribe();
+	}
+
 	private updateAssets({ component, styles, template }: TypeAssets): void {
 		if (!isNil(component)) {
 			this.componentEditor.content = component;

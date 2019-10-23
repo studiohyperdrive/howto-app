@@ -3,3 +3,10 @@
     margin: .5rem;
   }
 }
+
+.type-grid {
+  .flex-grid__item {
+    flex: 1 1 25%;
+    max-width: 300px;
+  }
+}

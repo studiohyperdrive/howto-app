@@ -17,7 +17,7 @@ export class ProjectDetailPage implements OnInit, OnDestroy {
 	private destroyed$: Subject<boolean> = new Subject<boolean>();
 
 	constructor(
-		private route: ActivatedRoute,
+		public route: ActivatedRoute,
 		private projectService: ProjectService,
 		private context: ContextService,
 	) {

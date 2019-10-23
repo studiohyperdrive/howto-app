@@ -8,7 +8,7 @@ import { BuilderType } from '../../../builder/builder.types';
 import { DialogDeleteProjectComponent } from '../../components/delete-project/delete-project.component';
 import { DialogNewTypeComponent } from '../../components/new-type/new-type.component';
 import { ProjectService } from '../../services/project.service';
-import { Project, UiComponent } from '../../types/project';
+import { Project } from '../../types/project';
 
 @Component({
 	templateUrl: './types-overview.page.html',
@@ -78,7 +78,6 @@ export class TypesOverviewPage implements OnInit, OnDestroy {
 
 	public addType(type: BuilderType): void {
 		const dialogRef = this.dialog.open(DialogNewTypeComponent, {
-			height: '300px',
 			width: '400px',
 			data: {
 				type,
@@ -104,10 +103,6 @@ export class TypesOverviewPage implements OnInit, OnDestroy {
 
 	public handleProjectClicked(project: Project): void {
 		this.projectService.openInCode(project.location).subscribe();
-	}
-
-	public handleTypeClicked(type: UiComponent): void {
-		this.projectService.openInCode(type.location).subscribe();
 	}
 
 	public handleProjectDeleted(project: Project): void {
