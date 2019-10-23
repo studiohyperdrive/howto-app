@@ -45,7 +45,7 @@ export class BuilderService {
 			project: name,
 		});
 		const installSchematics = this.run({
-			cmd: 'npm link @studiohyperdrive/howto-schematics',
+			cmd: 'npm install --save-dev @studiohyperdrive/howto-schematics@1.0.0-2',
 			status: BuilderStatus.INSTALLING_SCHEMATICS,
 			project: name,
 		});
