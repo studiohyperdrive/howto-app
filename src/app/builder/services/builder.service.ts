@@ -34,6 +34,11 @@ export class BuilderService {
 			status: BuilderStatus.INIT_APP,
 		});
 		const updateDescription = this.updateProjectDescription(name, description);
+		const generateStyleguide = this.run({
+			cmd: `ng g @studiohyperdrive/howto-schematics:styleguide`,
+			status: BuilderStatus.INIT_STYLEGUIDE,
+			project: name,
+		});
 		const installDependencies = this.run({
 			cmd: 'npm install --silent',
 			status: BuilderStatus.INSTALLING_PACKAGES,
@@ -42,11 +47,6 @@ export class BuilderService {
 		const installSchematics = this.run({
 			cmd: 'npm link @studiohyperdrive/howto-schematics',
 			status: BuilderStatus.INSTALLING_SCHEMATICS,
-			project: name,
-		});
-		const generateStyleguide = this.run({
-			cmd: `ng g @studiohyperdrive/howto-schematics:styleguide`,
-			status: BuilderStatus.INIT_STYLEGUIDE,
 			project: name,
 		});
 		const buildUI = this.run({
@@ -58,9 +58,9 @@ export class BuilderService {
 		return concat(
 			generateApp,
 			updateDescription,
+			generateStyleguide,
 			installDependencies,
 			installSchematics,
-			generateStyleguide,
 			buildUI,
 			of(BuilderStatus.DONE),
 		).pipe(
