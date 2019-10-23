@@ -87,8 +87,9 @@ export class ShellService {
 
 	public wait({ port }: { port: number }): Observable<any> {
 		return new Observable((subscriber) => {
-			this.waitForLocalhost({ port })
+			this.waitForLocalhost({ port, useGet: true })
 				.then(() => {
+					subscriber.next(true);
 					subscriber.complete();
 				})
 				.catch((err) => {
