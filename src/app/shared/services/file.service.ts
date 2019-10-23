@@ -66,7 +66,11 @@ export class FileService {
 
 	public getFileType(path: string): FileType {
 		const extension = this.path.extname(path);
-		const isUnitTest = (file) => file.includes('.spec') || file.includes('test');
+		const isUnitTest = (file) => {
+			const basename = this.path.basename(file);
+
+			return basename.includes('.spec') || basename.includes('.test');
+		};
 
 		switch (extension) {
 			case '.css':
