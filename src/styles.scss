@@ -13,6 +13,10 @@ html, body {
 	flex-wrap: wrap;
 }
 
+.flex-grid--column {
+  flex-flow: column;
+}
+
 .flex-grid--centered {
   justify-content: space-around;
   align-items: center;

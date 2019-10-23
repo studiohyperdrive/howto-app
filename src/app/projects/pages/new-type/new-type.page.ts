@@ -13,6 +13,7 @@ import { ProjectService } from '../../services/project.service';
 })
 export class NewTypePage implements OnInit, OnDestroy {
 	public status: BuilderStatus = null;
+	public takingTooLong = false;
 
 	public statusLoader = {
 		[BuilderStatus.INIT_COMPONENT]: LoaderType.BOX,
@@ -27,6 +28,7 @@ export class NewTypePage implements OnInit, OnDestroy {
 		[BuilderStatus.DONE]: 'All done!',
 	};
 
+	private takingTooLongTimer;
 	private destroyed$: Subject<boolean> = new Subject<boolean>();
 
 	constructor(
@@ -56,6 +58,16 @@ export class NewTypePage implements OnInit, OnDestroy {
 			)
 			.subscribe((status: BuilderStatus) => {
 				this.status = status;
+				this.takingTooLong = false;
+
+				if (this.takingTooLongTimer) {
+					clearTimeout(this.takingTooLongTimer);
+				}
+
+				this.takingTooLongTimer = setTimeout(() => {
+					this.takingTooLong = true;
+					this.cdr.detectChanges(); // TODO: figure this zone mess out
+				}, 10000);
 
 				this.cdr.detectChanges();
 
@@ -76,5 +88,8 @@ export class NewTypePage implements OnInit, OnDestroy {
 	public ngOnDestroy(): void {
 		this.destroyed$.next(true);
 		this.destroyed$.complete();
+		if (this.takingTooLongTimer) {
+			clearTimeout(this.takingTooLongTimer);
+		}
 	}
 }
