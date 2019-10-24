@@ -1,4 +1,4 @@
-<mat-tab-group dynamicHeight (selectedTabChange)="handleTabChanged($event)">
+<mat-tab-group dynamicHeight (selectedTabChange)="handleTabChanged($event)" *ngIf="type; else loadingTpl">
   <mat-tab label="Overview">
     <mat-card>
       <mat-card-header>
@@ -58,3 +58,7 @@
     </button>
   </mat-toolbar-row>
 </mat-toolbar>
+
+<ng-template #loadingTpl>
+  <howto-loader></howto-loader>
+</ng-template>
