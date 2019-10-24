@@ -34,6 +34,7 @@ export class ProjectsOverviewPage implements OnInit, OnDestroy {
 
 	public ngOnInit(): void {
 		this.context.clearAction();
+		this.context.setTitle('Projects');
 
 		this.projectService.projects$
 			.pipe(
