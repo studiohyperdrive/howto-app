@@ -35,7 +35,7 @@ export class BuilderService {
 		});
 		const updateDescription = this.updateProjectDescription(name, description);
 		const generateStyleguide = this.run({
-			cmd: `ng g @studiohyperdrive/howto-schematics:styleguide`,
+			cmd: `ng g @studiohyperdrive/howto-schematics:styleguide --skipInstall`,
 			status: BuilderStatus.INIT_STYLEGUIDE,
 			project: name,
 		});
