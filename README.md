@@ -22,9 +22,9 @@ This project has the following npm scripts.
 | build			 | Runs `npm run build:clean && npm run build:ng && npm run build:nw`
 | build:clean 	 | Runs `rimraf ./dist-ng ./dist`
 | build:ng		 | Runs `ng build --prod --output-path ./dist-ng`
-| build:nw		 | Runs `nwbuild .`
-| build:win		 | Runs `nwbuild  -p osx64 .`
-| build:win		 | Runs `nw-build -p win64 .`
+| build:nw		 | Runs `build --concurrent --tasks win-x86,linux-x86,linux-x64,mac-x64 --mirror https://dl.nwjs.io/ .`
+| build:win		 | Runs `npm run build:ng && build --tasks win-x86 --mirror https://dl.nwjs.io/ .`
+| run:win		 | Runs `dist\\nw-angular-1.1.0-win-x86\\nw-angular.exe`
 | generate		 | Runs `ng generate`
 | test			 | Runs `ng test`
 | lint			 | Runs `ng lint`
