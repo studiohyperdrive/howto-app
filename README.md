@@ -54,3 +54,4 @@ List the team that has worked on this project, including the duration e.g.:
 
 ## Attributions
 Icon made by Freepik from www.flaticon.com
+Loaders made by Sam from http://samherbert.net/svg-loaders/
