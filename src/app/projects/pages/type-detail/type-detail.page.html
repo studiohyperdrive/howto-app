@@ -53,9 +53,10 @@
 </mat-tab-group>
 <mat-toolbar color="accent" class="bottom-toolbar" *ngIf="editorVisible">
   <mat-toolbar-row>
-    <button mat-button (click)="saveType()">
+    <button mat-button *ngIf="!saving" (click)="saveType()">
       Save
     </button>
+    <mat-spinner class="mat-spinner--inverted" diameter="24" *ngIf="saving"></mat-spinner>
   </mat-toolbar-row>
 </mat-toolbar>
 

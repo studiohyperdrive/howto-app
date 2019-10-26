@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil, map, switchMap, tap } from 'rxjs/operators';
+import { takeUntil, map, switchMap, tap, finalize } from 'rxjs/operators';
 
 import { UiComponent, Project } from '../../types/project';
 import { ProjectService } from '../../services/project.service';
@@ -19,6 +19,7 @@ const EDITOR_THEME = 'vs-dark';
 export class TypeDetailPage implements OnInit, OnDestroy {
 	public type: UiComponent;
 	public editorVisible = false;
+	public saving = false;
 
 	private destroyed$: Subject<boolean> = new Subject<boolean>();
 
@@ -70,12 +71,19 @@ export class TypeDetailPage implements OnInit, OnDestroy {
 	}
 
 	public saveType(): void {
+		this.saving = true;
+
 		this.projectService.updateTypeAssets(this.type, {
 			component: this.componentEditor.content,
 			styles: this.stylesEditor.content,
 			template: this.templateEditor.content,
 		}).pipe(
 			takeUntil(this.destroyed$),
+			finalize(() => {
+				setTimeout(() => {
+					this.saving = false;
+				}, 1000);
+			}),
 		).subscribe((assets: TypeAssets) => {
 			this.updateAssets(assets);
 		});
