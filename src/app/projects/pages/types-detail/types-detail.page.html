@@ -1,0 +1,22 @@
+<div class="flex-grid type-grid">
+  <div class="flex-grid__item" *ngFor="let item of type.items">
+    <howto-type-card [type]="item"></howto-type-card>
+  </div>
+
+  <div class="flex-grid__item" *ngIf="!type.items.length">
+    <mat-card class="type-card">
+      <mat-card-content>
+        <p>{{ type.emptyMessage }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div class="flex-grid flex-grid--centered">
+  <div class="flex-grid__item">
+    <button mat-raised-button color="primary" (click)="addType()">
+      <mat-icon>add</mat-icon>
+      {{ type.addMessage }}
+    </button>
+  </div>
+</div>

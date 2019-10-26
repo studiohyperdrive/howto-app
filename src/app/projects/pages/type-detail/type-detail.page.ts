@@ -52,7 +52,7 @@ export class TypeDetailPage implements OnInit, OnDestroy {
 		this.projectService.project$
 			.pipe(
 				takeUntil(this.destroyed$),
-				map((project: Project) => project.types[`${this.route.snapshot.params.type}s`]),
+				map((project: Project) => project.types[this.route.snapshot.params.types]),
 				map((types: UiComponent[]) => types.find((type: UiComponent) => type.name === this.route.snapshot.params.id)),
 				tap((type: UiComponent) => {
 					this.type = type;

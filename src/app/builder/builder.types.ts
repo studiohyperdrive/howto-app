@@ -18,3 +18,8 @@ export enum BuilderType {
 	organism = 'organism',
 	page = 'page',
 }
+
+export enum BuilderProcess {
+	type = 'type',
+	project = 'project'
+}

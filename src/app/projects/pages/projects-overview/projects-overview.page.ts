@@ -8,7 +8,8 @@ import { DialogNewProjectComponent } from '../../components/new-project/new-proj
 import { ProjectService } from '../../services/project.service';
 import { Project } from '../../types/project';
 import { LoaderType } from '../../../shared/types/loader';
-import { ContextService } from 'src/app/shared/services/context.service';
+import { ContextService } from '../../../shared/services/context.service';
+import { BuilderProcess } from '../../../builder/builder.types';
 
 @Component({
 	templateUrl: './projects-overview.page.html',
@@ -77,6 +78,7 @@ export class ProjectsOverviewPage implements OnInit, OnDestroy {
 						projectName: values.name,
 						projectType: values.type,
 						projectDescription: values.description,
+						process: BuilderProcess.project,
 					},
 				});
 			});

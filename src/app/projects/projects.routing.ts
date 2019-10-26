@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { ProjectsOverviewPage } from './pages/projects-overview/projects-overview.page';
-import { NewProjectPage } from './pages/new-project/new-project.page';
 import { ProjectDetailPage } from './pages/project-detail/project-detail.page';
 import { TypesOverviewPage } from './pages/types-overview/types-overview.page';
-import { NewTypePage } from './pages/new-type/new-type.page';
 import { TypeDetailPage } from './pages/type-detail/type-detail.page';
+import { ProcessingPage } from './pages/processing/processing.page';
+import { TypesDetailPage } from './pages/types-detail/types-detail.page';
 
 const routes: Routes = [
 	{
@@ -15,7 +15,7 @@ const routes: Routes = [
 	},
 	{
 		path: 'projects/new',
-		component: NewProjectPage,
+		component: ProcessingPage,
 		data: {
 			title: 'Creating New Project',
 		},
@@ -26,23 +26,32 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
+				redirectTo: 'overview',
+				pathMatch: 'full',
+			},
+			{
+				path: 'overview',
 				component: TypesOverviewPage,
 				data: {
 					title: '{project}',
 				},
 			},
 			{
-				path: ':type/new',
-				component: NewTypePage,
+				path: ':types',
+				component: TypesDetailPage,
 				data: {
-					title: 'Creating New {type}',
+					title: '{project} {types}'
 				},
 			},
 			{
-				path: ':type/:id',
+				path: ':types/new',
+				component: ProcessingPage
+			},
+			{
+				path: ':types/:id',
 				component: TypeDetailPage,
 				data: {
-					title: '{project} {type}',
+					title: '{project} {id}',
 				},
 			},
 		],

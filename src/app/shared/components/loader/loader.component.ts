@@ -9,7 +9,7 @@ import { LoaderType } from '../../types/loader';
 	],
 })
 export class LoaderComponent {
-	@Input() public type: LoaderType = LoaderType.BOX;
+	@Input() public type: LoaderType = LoaderType.DOTS;
 
 	public LoaderType = LoaderType;
 }

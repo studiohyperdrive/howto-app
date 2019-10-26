@@ -3,15 +3,28 @@
     <a mat-button [routerLink]="['/projects']">projects</a>
     <mat-icon>arrow_right</mat-icon>
     <a mat-button [routerLink]="['/projects', project.name]">{{project.name}}</a>
-    <ng-container *ngIf="route.snapshot.params.type as type">
-      <mat-icon>arrow_right</mat-icon>
-      <a mat-button [routerLink]="['/projects', project.name, type]">{{type}}s</a>
-    </ng-container>
-    <ng-container *ngIf="route.snapshot.params.id as id">
-      <mat-icon>arrow_right</mat-icon>
-      <a mat-button [routerLink]="['/projects', project.name, type, id]">{{id}}s</a>
+
+    <ng-container *ngIf="context.route$ | async as route">
+      <ng-container *ngIf="route?.params.types as types">
+        <mat-icon>arrow_right</mat-icon>
+        <a mat-button [routerLink]="['/projects', project.name, types]">{{types}}</a>
+      </ng-container>
+      <ng-container *ngIf="route?.params.id as id">
+        <mat-icon>arrow_right</mat-icon>
+        <a mat-button [routerLink]="['/projects', project.name, types, id]">{{id}}</a>
+      </ng-container>
     </ng-container>
   </mat-toolbar>
+
+  <nav mat-tab-nav-bar *ngIf="!(context.route$ | async)?.params?.id">
+    <a mat-tab-link
+      *ngFor="let type of types"
+      [routerLink]="type.path"
+      routerLinkActive #rla="routerLinkActive"
+      [active]="rla.isActive">
+      {{type.title}}
+    </a>
+  </nav>
 
   <router-outlet></router-outlet>
 </ng-container>

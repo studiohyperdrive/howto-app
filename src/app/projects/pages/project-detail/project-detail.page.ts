@@ -1,25 +1,49 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ReduxRouterParams } from '@studiohyperdrive/ng-redux-router';
 import { Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { ProjectService } from '../../services/project.service';
 import { Project } from '../../types/project';
 import { ContextService } from '../../../shared/services/context.service';
-import { RunningProcess } from 'src/app/shared/types/os';
+import { RunningProcess } from '../../../shared/types/os';
+import { BuilderType } from '../../../builder/builder.types';
 
 @Component({
 	templateUrl: './project-detail.page.html',
 })
 export class ProjectDetailPage implements OnInit, OnDestroy {
 	public project: Project;
+	public types = [
+		{
+			title: 'Overview',
+			path: ['.', 'overview'],
+		},
+		{
+			title: 'Atoms',
+			path: ['.', `${BuilderType.atom}s`],
+		},
+		{
+			title: 'Molecules',
+			path: ['.', `${BuilderType.molecule}s`],
+		},
+		{
+			title: 'Organisms',
+			path: ['.', `${BuilderType.organism}s`],
+		},
+		{
+			title: 'Pages',
+			path: ['.', `${BuilderType.page}s`],
+		},
+	];
 
 	private destroyed$: Subject<boolean> = new Subject<boolean>();
 
 	constructor(
-		public route: ActivatedRoute,
+		public context: ContextService,
 		private projectService: ProjectService,
-		private context: ContextService,
+		private route: ActivatedRoute,
 	) {
 		this.launchProject = this.launchProject.bind(this);
 		this.stopProject = this.stopProject.bind(this);

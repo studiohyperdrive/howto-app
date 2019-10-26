@@ -1,91 +1,50 @@
-<mat-tab-group dynamicHeight *ngIf="!deleting; else deletingTpl">
-  <mat-tab label="Overview">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>{{ project.name | titlecase }}</mat-card-title>
-        <mat-card-subtitle>{{ project.version }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="u-margin-bottom" *ngIf="project.description || project.keywords">
-          <p>{{ project.description || 'Missing description' }}</p>
-          <small>{{ project.keywords }}</small>
-        </div>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Project info</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-accordion>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                Dependencies
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <howto-dependencies [dependencies]="project.dependencies"></howto-dependencies>
-          </mat-expansion-panel>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                File system
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-list>
-              <mat-list-item>
-                <mat-icon mat-list-icon>folder</mat-icon>
-                <h4 mat-line>{{ project.location }}</h4>
-              </mat-list-item>
-            </mat-list>
-          </mat-expansion-panel>
-        </mat-accordion>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card>
-      <mat-card-actions class="overview-actions">
-        <button mat-raised-button color="primary" (click)="handleProjectClicked(project)">Open in Visual Studio Code</button>
-        <button mat-flat-button color="warn" (click)="handleProjectDeleted(project)">Delete</button>
-      </mat-card-actions>
-    </mat-card>
-  </mat-tab>
-  <ng-container *ngFor="let type of types">
-    <mat-tab [label]="type.title">
-      <ng-template matTabContent>
-        <div class="flex-grid type-grid">
-          <div class="flex-grid__item" *ngFor="let item of type.items">
-            <howto-type-card [type]="item"></howto-type-card>
-          </div>
-
-          <div class="flex-grid__item" *ngIf="!type.items.length">
-            <mat-card class="type-card">
-              <mat-card-content>
-                <p>{{ type.emptyMessage }}</p>
-              </mat-card-content>
-            </mat-card>
-          </div>
-        </div>
-
-        <div class="flex-grid flex-grid--centered">
-          <div class="flex-grid__item">
-            <button mat-raised-button color="primary" (click)="addType(type.type)">
-              <mat-icon>add</mat-icon>
-              {{ type.addMessage }}
-            </button>
-          </div>
-        </div>
-      </ng-template>
-    </mat-tab>
-  </ng-container>
-</mat-tab-group>
-
-<ng-template #deletingTpl>
-  <div class="flex-grid flex-grid--centered">
-    <div class="flex-grid__item">
-      <p class="mat-body">Deleting the project...</p>
-      <howto-loader></howto-loader>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{ project.name | titlecase }}</mat-card-title>
+    <mat-card-subtitle>{{ project.version }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="u-margin-bottom" *ngIf="project.description || project.keywords">
+      <p>{{ project.description || 'Missing description' }}</p>
+      <small>{{ project.keywords }}</small>
     </div>
-  </div>
-</ng-template>
+  </mat-card-content>
+</mat-card>
+
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Project info</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Dependencies
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <howto-dependencies [dependencies]="project.dependencies"></howto-dependencies>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            File system
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-list>
+          <mat-list-item>
+            <mat-icon mat-list-icon>folder</mat-icon>
+            <h4 mat-line>{{ project.location }}</h4>
+          </mat-list-item>
+        </mat-list>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card-content>
+</mat-card>
+
+<mat-card>
+  <mat-card-actions class="overview-actions">
+    <button mat-raised-button color="primary" (click)="handleProjectClicked(project)">Open in Visual Studio Code</button>
+    <button mat-flat-button color="warn" (click)="handleProjectDeleted(project)">Delete</button>
+  </mat-card-actions>
+</mat-card>
