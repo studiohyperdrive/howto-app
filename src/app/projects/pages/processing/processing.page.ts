@@ -7,7 +7,7 @@ import { BuilderService } from '../../../builder/services/builder.service';
 import { BuilderStatus, BuilderProcess, BuilderType } from '../../../builder/builder.types';
 import { LoaderType } from '../../../shared/types/loader';
 import { ProjectService } from '../../services/project.service';
-import { ContextService } from 'src/app/shared/services/context.service';
+import { ContextService } from '../../../shared/services/context.service';
 
 @Component({
 	templateUrl: './processing.page.html',
@@ -20,6 +20,7 @@ export class ProcessingPage implements OnInit, OnDestroy {
 		[BuilderStatus.INIT_APP]: LoaderType.BOX,
 		[BuilderStatus.INIT_STYLEGUIDE]: LoaderType.BARS,
 		[BuilderStatus.INIT_COMPONENT]: LoaderType.BOX,
+		[BuilderStatus.INSTALLING_CLI]: LoaderType.CLOCK,
 		[BuilderStatus.INSTALLING_PACKAGES]: LoaderType.CLOCK,
 		[BuilderStatus.INSTALLING_SCHEMATICS]: LoaderType.CLOCK,
 		[BuilderStatus.BUILD_UI]: LoaderType.SWIRL,
@@ -32,6 +33,7 @@ export class ProcessingPage implements OnInit, OnDestroy {
 		[BuilderStatus.INIT_APP]: 'Setting up your project...',
 		[BuilderStatus.INIT_STYLEGUIDE]: 'Creating a styleguide...',
 		[BuilderStatus.INIT_COMPONENT]: 'Setting up your component...',
+		[BuilderStatus.INSTALLING_CLI]: 'Installing the Angular CLI...',
 		[BuilderStatus.INSTALLING_PACKAGES]: 'Installing packages...',
 		[BuilderStatus.INSTALLING_SCHEMATICS]: 'Installing packages...',
 		[BuilderStatus.BUILD_UI]: 'Building components...',
@@ -133,6 +135,15 @@ export class ProcessingPage implements OnInit, OnDestroy {
 						}, 2000);
 					})
 				);
+			case BuilderProcess.system:
+				return this.builder.installCLI()
+					.pipe(
+						finalize(() => {
+							setTimeout(() => {
+								this.router.navigate(['/']);
+							}, 2000);
+						}),
+					);
 			default:
 				return of(null)
 					.pipe(

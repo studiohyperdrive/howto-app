@@ -3,7 +3,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { SharedModule } from '../shared/shared.module';
 
-import { CoreComponents } from './components';
+import { CoreComponents, EntryComponents } from './components';
 
 @NgModule({
 	declarations: [
@@ -15,6 +15,9 @@ import { CoreComponents } from './components';
 	],
 	exports: [
 		CoreComponents,
-	]
+	],
+	entryComponents: [
+		EntryComponents,
+	],
 })
 export class CoreModule { }

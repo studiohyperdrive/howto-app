@@ -4,6 +4,7 @@ export enum BuilderStatus {
 	INIT_APP = 'INIT_APP',
 	INIT_COMPONENT = 'INIT_COMPONENT',
 	INIT_STYLEGUIDE = 'INIT_STYLEGUIDE',
+	INSTALLING_CLI = 'INSTALLING_CLI',
 	INSTALLING_PACKAGES = 'INSTALLING_PACKAGES',
 	INSTALLING_SCHEMATICS = 'INSTALLING_SCHEMATICS',
 	BUILD_UI = 'BUILD_UI',
@@ -21,5 +22,6 @@ export enum BuilderType {
 
 export enum BuilderProcess {
 	type = 'type',
-	project = 'project'
+	project = 'project',
+	system = 'system',
 }

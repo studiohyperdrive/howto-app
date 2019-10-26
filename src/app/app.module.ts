@@ -9,6 +9,7 @@ import { CoreModule } from './core/core.module';
 import { BuilderModule } from './builder/builder.module';
 import { ProjectsModule } from './projects/projects.module';
 import { SettingsModule } from './settings/settings.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
 	declarations: [
@@ -17,6 +18,7 @@ import { SettingsModule } from './settings/settings.module';
 	imports: [
 		BrowserModule,
 		BrowserAnimationsModule,
+		SharedModule,
 		MatSidenavModule,
 		CoreModule,
 		BuilderModule,

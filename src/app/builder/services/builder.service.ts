@@ -24,6 +24,16 @@ export class BuilderService {
 		this.root = this.path.join(this.require('os').homedir(), 'Projects');
 	}
 
+	public installCLI(): Observable<BuilderStatus> {
+		return concat(
+			this.run({
+				cmd: 'npm install -g @angular/cli@8.* --silent',
+				status: BuilderStatus.INSTALLING_CLI,
+			}),
+			of(BuilderStatus.DONE),
+		);
+	}
+
 	public setupProject(name: string, description: string): Observable<BuilderStatus> {
 		if (!this.fs.makeDir(this.root)) {
 			return throwError(BuilderStatus.MKDIR_FAILED);
@@ -63,8 +73,6 @@ export class BuilderService {
 			installDependencies,
 			buildUI,
 			of(BuilderStatus.DONE),
-		).pipe(
-			filter((message: any) => !!BuilderStatus[message]),
 		);
 	}
 
@@ -130,8 +138,6 @@ export class BuilderService {
 			generateType,
 			buildUI,
 			of(BuilderStatus.DONE),
-		).pipe(
-			filter((message: any) => !!BuilderStatus[message]),
 		);
 	}
 
@@ -143,7 +149,9 @@ export class BuilderService {
 				cwd: project,
 			});
 
-			return exec$;
+			return exec$.pipe(
+				filter((message: any) => !!BuilderStatus[message]),
+			);
 		});
 	}
 

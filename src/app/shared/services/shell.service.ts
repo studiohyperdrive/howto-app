@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Observable, merge, of, Subscriber } from 'rxjs';
 
 @Injectable()
@@ -13,7 +13,9 @@ export class ShellService {
 
 	private root;
 
-	constructor() {
+	constructor(
+		private ngZone: NgZone,
+	) {
 		this.execa = window.nw.require('execa');
 		this.path = window.nw.require('path');
 		this.process = window.nw.require('process');
@@ -60,26 +62,33 @@ export class ShellService {
 
 				pcs.stdout.on('data', (message) => {
 					console.log(message.toString());
-					subscriber.next(message.toString());
+
+					this.ngZone.run(() => {
+						subscriber.next(message.toString());
+					});
 				});
 
 				pcs
 					.then(({ stdout, stderr }) => {
-						if (stderr) {
-							subscriber.error(stderr);
-						} else {
-							subscriber.next(stdout);
-						}
+						this.ngZone.run(() => {
+							if (stderr) {
+								subscriber.error(stderr);
+							} else {
+								subscriber.next(stdout);
+							}
 
-						subscriber.complete();
+							subscriber.complete();
 
-						this.pcs.delete(pid);
+							this.pcs.delete(pid);
+						});
 					})
 					.catch((err) => {
-						subscriber.error(err);
-						subscriber.complete();
+						this.ngZone.run(() => {
+							subscriber.error(err);
+							subscriber.complete();
 
-						this.pcs.delete(pid);
+							this.pcs.delete(pid);
+						});
 					});
 			}),
 		};

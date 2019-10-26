@@ -1,0 +1,29 @@
+<ng-container *ngIf="!!data?.version; else missingTpl">
+  <h1 mat-dialog-title>Angular CLI version</h1>
+  <mat-dialog-content>
+    <p class="mat-body">
+      The howto app works best with <strong>Angular CLI version 8</strong> (and above). It seems like you have installed version <strong>{{ data.version }}</strong>.
+      <br />
+      Do you want to update your Angular CLI install to version 8?
+    </p>
+  </mat-dialog-content>
+</ng-container>
+
+<ng-template #missingTpl>
+  <h1 mat-dialog-title>Angular CLI missing</h1>
+  <mat-dialog-content>
+    <p class="mat-body">
+      The howto app works internally with the Angular CLI. It seems the CLI is not installed on your system.
+      <br />
+      Do you want to install the Angular CLI?
+    </p>
+  </mat-dialog-content>
+</ng-template>
+
+<div mat-dialog-actions>
+  <button mat-flat-button color="primary" (click)="onConfirm()">
+    <span *ngIf="data?.version">Update</span>
+    <span *ngIf="!data?.version">Install</span>
+  </button>
+  <button mat-button type="button" (click)="onCancel()">Cancel</button>
+</div>

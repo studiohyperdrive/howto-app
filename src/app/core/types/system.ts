@@ -1,0 +1,5 @@
+export enum SystemStatus {
+	OK = 'OK',
+	MISSING_CLI = 'MISSING_CLI',
+	VERSION_MISMATCH = 'VERSION_MISMATCH',
+}
