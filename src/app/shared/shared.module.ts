@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
+import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
+
 import { MatInputModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -17,63 +19,64 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MonacoEditorModule } from 'ngx-monaco-editor';
 
 import { SharedComponents } from './components/index';
 import { ShellService } from './services/shell.service';
 
 @NgModule({
-	providers: [
-		ShellService,
-	],
-	imports: [
-		CommonModule,
-		FormsModule,
-		ReactiveFormsModule,
-		RouterModule,
+  providers: [
+    ShellService,
+  ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule,
 
-		MatInputModule,
-		MatButtonModule,
-		MatCardModule,
-		MatDialogModule,
-		MatDividerModule,
-		MatExpansionModule,
-		MatFormFieldModule,
-		MatIconModule,
-		MatListModule,
-		MatProgressBarModule,
-		MatProgressSpinnerModule,
-		MatSelectModule,
-		MatToolbarModule,
-		MatTabsModule,
-		MonacoEditorModule.forRoot(),
-	],
-	declarations: [
-		SharedComponents,
-	],
-	exports: [
-		CommonModule,
-		FormsModule,
-		ReactiveFormsModule,
-		RouterModule,
+    MonacoEditorModule,
 
-		MatInputModule,
-		MatButtonModule,
-		MatCardModule,
-		MatDialogModule,
-		MatDividerModule,
-		MatExpansionModule,
-		MatFormFieldModule,
-		MatIconModule,
-		MatListModule,
-		MatProgressBarModule,
-		MatProgressSpinnerModule,
-		MatSelectModule,
-		MatToolbarModule,
-		MatTabsModule,
-		MonacoEditorModule,
+    MatInputModule,
+    MatButtonModule,
+    MatCardModule,
+    MatDialogModule,
+    MatDividerModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatListModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatToolbarModule,
+    MatTabsModule,
+  ],
+  declarations: [
+    SharedComponents,
+  ],
+  exports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule,
 
-		SharedComponents,
-	],
+    MonacoEditorModule,
+
+    MatInputModule,
+    MatButtonModule,
+    MatCardModule,
+    MatDialogModule,
+    MatDividerModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatListModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatToolbarModule,
+    MatTabsModule,
+
+    SharedComponents,
+  ],
 })
 export class SharedModule { }
