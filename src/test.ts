@@ -18,31 +18,3 @@ getTestBed().initTestEnvironment(
 const context = require.context('./', true, /\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);
-
-const nw = 'nw';
-const nwMock = {
-  process: {
-    versions: {
-      nw: '0.40.2',
-      'nw-flavor': 'sdk',
-      node: '12.9.1',
-      chromium: '76.0.3809.132'
-    }
-  },
-  Shell: {
-    openExternal () {
-      return undefined;
-    }
-  },
-  Window: {
-    get () {
-      return {
-        showDevTools () {
-          return undefined;
-        }
-      };
-    }
-  }
-};
-global[nw] = nwMock;
-window[nw] = nwMock;

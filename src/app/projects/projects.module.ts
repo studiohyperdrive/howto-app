@@ -7,16 +7,16 @@ import { ProjectsPages } from './pages/index';
 import { ProjectsRoutingModule } from './projects.routing';
 
 @NgModule({
-	declarations: [
-		ProjectsPages,
-		ProjectsComponents,
-	],
-	imports: [
-		ProjectsRoutingModule,
-		SharedModule,
-	],
-	entryComponents: [
-		ProjectsEntryComponents,
-	],
+  declarations: [
+    ProjectsPages,
+    ProjectsComponents,
+  ],
+  imports: [
+    ProjectsRoutingModule,
+    SharedModule,
+  ],
+  entryComponents: [
+    ProjectsEntryComponents,
+  ],
 })
 export class ProjectsModule { }

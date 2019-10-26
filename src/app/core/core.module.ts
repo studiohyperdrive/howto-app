@@ -3,21 +3,21 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { SharedModule } from '../shared/shared.module';
 
-import { CoreComponents, EntryComponents } from './components';
+import { CoreComponents, EntryComponents } from './components/index';
 
 @NgModule({
-	declarations: [
-		CoreComponents,
-	],
-	imports: [
-		SharedModule,
-		MatToolbarModule,
-	],
-	exports: [
-		CoreComponents,
-	],
-	entryComponents: [
-		EntryComponents,
-	],
+  declarations: [
+    CoreComponents,
+  ],
+  imports: [
+    SharedModule,
+    MatToolbarModule,
+  ],
+  exports: [
+    CoreComponents,
+  ],
+  entryComponents: [
+    EntryComponents,
+  ],
 })
-export class CoreModule { }
+export class CoreModule {}

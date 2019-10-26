@@ -12,21 +12,21 @@ import { SettingsModule } from './settings/settings.module';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
-	declarations: [
-		AppComponent
-	],
-	imports: [
-		BrowserModule,
-		BrowserAnimationsModule,
-		SharedModule,
-		MatSidenavModule,
-		CoreModule,
-		BuilderModule,
-		ProjectsModule,
-		SettingsModule,
-		AppRoutingModule,
-	],
-	providers: [],
-	bootstrap: [AppComponent]
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    SharedModule,
+    MatSidenavModule,
+    CoreModule,
+    BuilderModule,
+    ProjectsModule,
+    SettingsModule,
+    AppRoutingModule,
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

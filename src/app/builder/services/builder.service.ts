@@ -19,8 +19,8 @@ export class BuilderService {
 		private fs: FileService,
 		private ngZone: NgZone,
 	) {
-		this.path = this.doc.defaultView.nw.require('path');
-		this.require = this.doc.defaultView.nw.require;
+		this.path = this.doc.defaultView.require('path');
+		this.require = this.doc.defaultView.require;
 		this.root = this.path.join(this.require('os').homedir(), 'Projects');
 	}
 

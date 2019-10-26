@@ -1,14 +1,28 @@
-import 'hammerjs';
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
+import { AppConfig } from './environments/environment';
 
-if (environment.production) {
+if (AppConfig.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+platformBrowserDynamic()
+  .bootstrapModule(AppModule, {
+    preserveWhitespaces: false
+  })
+  // .then(() => {
+  //   if ((window as any).requirejs) {
+  //     (window as any).require = (path) => {
+  //       if (Array.isArray(path)) {
+  //         return (window as any).requirejs(path);
+  //       }
 
+  //       return (window as any).require(path);
+  //     };
+
+  //     (window as any).require.config = (window as any).requirejs.config;
+  //   }
+  // })
+  .catch(err => console.error(err));

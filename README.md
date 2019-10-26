@@ -8,27 +8,23 @@ This project has been generated using:
 - `nodejs`: 10.16.3
 - `npm`: 6.9.0
 
-Based on the following boilerplate: https://github.com/nwutils/nw-angular-cli-example
-
 ## Project setup
 ### npm scripts
 This project has the following npm scripts.
 
 | Command        | Description
 | -------------- | -----------
-| ng			 | Runs `ng`
-| start			 | Runs `concurrently \"npm run start:web\" \"wait-on http://localhost:8964 && nw .\"`
-| start:web		 | Runs `ng serve --port=8964`
-| build			 | Runs `npm run build:clean && npm run build:ng && npm run build:nw`
-| build:clean 	 | Runs `rimraf ./dist-ng ./dist`
-| build:ng		 | Runs `ng build --prod --output-path ./dist-ng`
-| build:nw		 | Runs `build --concurrent --tasks win-x86,linux-x86,linux-x64,mac-x64 --mirror https://dl.nwjs.io/ .`
-| build:win		 | Runs `npm run build:ng && build --tasks win-x86 --mirror https://dl.nwjs.io/ .`
-| run:win		 | Runs `dist\\nw-angular-1.1.0-win-x86\\nw-angular.exe`
-| generate		 | Runs `ng generate`
-| test			 | Runs `ng test`
-| lint			 | Runs `ng lint`
-| e2e			 | Runs `ng e2e`
+| start			 | Runs the dev build in Electron. (runs on http://localhost:4379)
+| build			 | Runs an Angular and Electron build.
+| build:dev  | Runs an Angular and Electron with the dev configuration.
+| build:prod | Runs an Angular and Electron with the prod configuration.
+| electron:linux | Build the application for Linux.
+| electron:windows | Build the application for Windows.
+| electron:mac | Build the application for Mac.
+| test       | Run the tests.
+| e2s        | Run the end-to-end tests.
+| version    | Update the version and changelog following conventional commits rules.
+| lint       | Run the linter.
 
 All commands are executable by running `npm run [COMMAND-NAME]`.
 
@@ -53,5 +49,6 @@ List the team that has worked on this project, including the duration e.g.:
     * **Period**: September 2019 -> ...
 
 ## Attributions
-Icon made by Freepik from www.flaticon.com
-Loaders made by Sam from http://samherbert.net/svg-loaders/
+Icon made by [Freepik](www.flaticon.com).
+Loaders made by [Sam Herbert](http://samherbert.net/svg-loaders/).
+Setup based on [Maxime Gris's Angular-electron bootstrap](https://github.com/maximegris/angular-electron).
