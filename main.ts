@@ -3,11 +3,13 @@ import * as path from 'path';
 import * as url from 'url';
 import * as fixPath from 'fix-path';
 
-fixPath();
-
 let win, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
+
+if (!serve) {
+  fixPath();
+}
 
 function createWindow() {
 
