@@ -8,8 +8,59 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+      .root__loading {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 10;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .root__svg-wrapper {
+        width: 100px;
+        height: 100px;
+      }
+    </style>
 </head>
   <body>
-    <howto-root>Loading...</howto-root>
+    <howto-root>
+      <div class="root__loading">
+        <div class="root__svg-wrapper">
+          <svg version="1.1" id="L4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
+            <circle fill="#4154af" stroke="none" cx="19" cy="50" r="6">
+              <animate
+                attributeName="opacity"
+                dur="1s"
+                values="0;1;0"
+                repeatCount="indefinite"
+                begin="0.1"/>
+            </circle>
+            <circle fill="#4154af" stroke="none" cx="44" cy="50" r="6">
+              <animate
+                attributeName="opacity"
+                dur="1s"
+                values="0;1;0"
+                repeatCount="indefinite"
+                begin="0.2"/>
+            </circle>
+            <circle fill="#4154af" stroke="none" cx="69" cy="50" r="6">
+              <animate
+                attributeName="opacity"
+                dur="1s"
+                values="0;1;0"
+                repeatCount="indefinite"
+                begin="0.3"/>
+            </circle>
+          </svg>
+        </div>
+      </div>
+    </howto-root>
   </body>
 </html>
