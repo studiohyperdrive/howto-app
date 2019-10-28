@@ -1,12 +1,14 @@
-import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { DialogDeleteProjectComponent } from '../../components/delete-project/delete-project.component';
 import { ProjectService } from '../../services/project.service';
 import { Project } from '../../types/project';
+import { Dependency } from '../../../shared/types/dependencies';
+import { BuilderProcess } from '../../../builder/builder.types';
 
 @Component({
   templateUrl: './types-overview.page.html',
@@ -23,8 +25,8 @@ export class TypesOverviewPage implements OnInit, OnDestroy {
   constructor(
     private dialog: MatDialog,
     private router: Router,
+    private route: ActivatedRoute,
     private projectService: ProjectService,
-    private ngZone: NgZone,
   ) { }
 
   public ngOnInit(): void {
@@ -60,14 +62,24 @@ export class TypesOverviewPage implements OnInit, OnDestroy {
           this.deleting = true;
           this.projectService.deleteProject(project.location)
             .then(() => {
-              this.ngZone.run(() => {
-                this.router.navigate(['/projects']);
-              });
+              this.router.navigate(['/projects']);
             })
             .catch(() => {
               this.deleting = false;
             });
         }
       });
+  }
+
+  public handleInstallDependency({ name, version }: Dependency): void {
+    this.router.navigate(['..', 'dependency'], {
+      relativeTo: this.route,
+      queryParams: {
+        dependencyName: name,
+        dependencyVersion: version,
+        projectName: this.project.name,
+        process: BuilderProcess.dependencies,
+      },
+    });
   }
 }
