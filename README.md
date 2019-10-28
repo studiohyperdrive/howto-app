@@ -41,10 +41,10 @@ We follow these naming conventions:
 
 ### Team ###
 List the team that has worked on this project, including the duration e.g.:
-* [Tom Opdebeeck - Studio Hyperdrive](tom.opdebeeck@studiohyperdrive.be)
+* [Tom Opdebeeck - Studio Hyperdrive](https://github.com/tom-odb)
     * **Function**: JavaScript developer
     * **Period**: September 2019 -> ...
-* [Denis Valcke - Studio Hyperdrive](denis.valcke@studiohyperdrive.be)
+* [Denis Valcke - Studio Hyperdrive](https://github.com/DenisValcke)
     * **Function**: JavaScript developer
     * **Period**: September 2019 -> ...
 
