@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>Install Dependency</h1>
+<mat-dialog-content>
+  <mat-form-field class="u-full-width">
+    <input type="text" placeholder="Search for dependencies" matInput [formControl]="query" [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="handleOptionSelected($event)">
+      <mat-option *ngIf="searching">
+        Searching...
+      </mat-option>
+      <mat-option *ngFor="let result of results" [value]="result">
+        {{ result.name }}@{{ result.version}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</mat-dialog-content>
+<div mat-dialog-actions>
+  <button mat-flat-button color="primary" type="button" [disabled]="!dependencyToInstall" (click)="onSubmit()">Install</button>
+  <button mat-button type="button" (click)="onCancel()">Cancel</button>
+</div>
