@@ -1,10 +1,10 @@
-# Howto | _howto_angular_2019_
+# Howto App
 
 ## Specifications
 This project has been generated using:
-- `@angular/cli`: 9.0.0-next.6
-- `@angular`: 9.0.0-next.8
-- `nw`: 0.41.2-sdk
+- `@angular/cli`: 8.2.12
+- `@angular`: 8.3.6
+- `electron`: 7.0.0
 - `nodejs`: 10.16.3
 - `npm`: 6.9.0
 
@@ -12,19 +12,19 @@ This project has been generated using:
 ### npm scripts
 This project has the following npm scripts.
 
-| Command        | Description
-| -------------- | -----------
-| start			 | Runs the dev build in Electron. (runs on http://localhost:4379)
-| build			 | Runs an Angular and Electron build.
-| build:dev  | Runs an Angular and Electron with the dev configuration.
-| build:prod | Runs an Angular and Electron with the prod configuration.
-| electron:linux | Build the application for Linux.
-| electron:windows | Build the application for Windows.
-| electron:mac | Build the application for Mac.
-| test       | Run the tests.
-| e2s        | Run the end-to-end tests.
-| version    | Update the version and changelog following conventional commits rules.
-| lint       | Run the linter.
+| Command           | Description
+| ----------------- | -----------
+| start             | Runs the dev build in Electron. (runs on http://localhost:4379)
+| build             | Runs an Angular and Electron build.
+| build:dev         | Runs an Angular and Electron with the dev configuration.
+| build:prod        | Runs an Angular and Electron with the prod configuration.
+| electron:linux    | Build the application for Linux.
+| electron:windows  | Build the application for Windows.
+| electron:mac      | Build the application for Mac.
+| test              | Run the tests.
+| e2s               | Run the end-to-end tests.
+| version           | Update the version and changelog following conventional commits rules.
+| lint              | Run the linter.
 
 All commands are executable by running `npm run [COMMAND-NAME]`.
 
