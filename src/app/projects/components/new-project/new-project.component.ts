@@ -8,74 +8,74 @@ import { takeUntil } from 'rxjs/operators';
 import { InstantErrorMatcher } from '../../../shared/utils/error-state-matcher';
 
 @Component({
-	selector: 'howto-dialog-new-project',
-	templateUrl: './new-project.component.html',
-	styleUrls: [
-		'./new-project.component.scss',
-	],
+  selector: 'howto-dialog-new-project',
+  templateUrl: './new-project.component.html',
+  styleUrls: [
+    './new-project.component.scss',
+  ],
 })
 export class DialogNewProjectComponent implements OnInit, OnDestroy {
-	public errorStateMatcher = new InstantErrorMatcher();
-	public newProjectForm: FormGroup;
-	public slugified = '';
+  public errorStateMatcher = new InstantErrorMatcher();
+  public newProjectForm: FormGroup;
+  public slugified = '';
 
-	private destroyed$: Subject<boolean> = new Subject<boolean>();
+  private destroyed$: Subject<boolean> = new Subject<boolean>();
 
-	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: any,
-		public dialogRef: MatDialogRef<DialogNewProjectComponent>,
-	) {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public dialogRef: MatDialogRef<DialogNewProjectComponent>,
+  ) { }
 
-	public ngOnInit(): void {
-		this.newProjectForm = new FormGroup({
-			name: new FormControl('', [
-				Validators.required,
-				this.projectDoesNotExist(),
-			]),
-			type: new FormControl('atomic', [
-				Validators.required,
-			]),
-			description: new FormControl(''),
-		});
+  public ngOnInit(): void {
+    this.newProjectForm = new FormGroup({
+      name: new FormControl('', [
+        Validators.required,
+        this.projectDoesNotExist(),
+      ]),
+      type: new FormControl('atomic', [
+        Validators.required,
+      ]),
+      description: new FormControl(''),
+    });
 
-		this.newProjectForm.get('name').valueChanges
-			.pipe(
-				takeUntil(this.destroyed$),
-			)
-			.subscribe((name: string) => {
-				this.slugified = slugify(name);
-			});
-	}
+    this.newProjectForm.get('name').valueChanges
+      .pipe(
+        takeUntil(this.destroyed$),
+      )
+      .subscribe((name: string) => {
+        this.slugified = slugify(name);
+      });
+  }
 
-	public ngOnDestroy(): void {
-		this.destroyed$.next(true);
-		this.destroyed$.complete();
-	}
+  public ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
 
-	public onCancel(): void {
-		this.dialogRef.close();
-	}
+  public onCancel(): void {
+    this.dialogRef.close();
+  }
 
-	public handleFormSubmit(): void {
-		const values = this.newProjectForm.value;
+  public handleFormSubmit(): void {
+    const values = this.newProjectForm.value;
 
-		this.dialogRef.close({
-			...values,
-			name: slugify(values.name),
-		});
-	}
+    this.dialogRef.close({
+      ...values,
+      name: slugify(values.name),
+    });
+  }
 
-	private projectDoesNotExist(): ValidatorFn {
-		return (control: FormControl): ValidationErrors => {
-			if (control.pristine || !control.value) {
-				return null;
-			}
+  private projectDoesNotExist(): ValidatorFn {
+    return (control: FormControl): ValidationErrors => {
+      if (control.pristine || !control.value) {
+        return null;
+      }
 
-			const projects = this.data.projects || [];
+      const projects = this.data.projects || [];
 
-			return projects.includes(control.value) ? {
-				projectExists: true,
-			} : null;
-		};
-	}
+      return projects.includes(control.value) ? {
+        projectExists: true,
+      } : null;
+    };
+  }
 }

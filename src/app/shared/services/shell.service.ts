@@ -43,7 +43,7 @@ export class ShellService {
     };
   }
 
-  public exec(command: string, { cwd }: { cwd?: string } = {}): { exec$: Observable<any>, pid: string; } {
+  public exec(command: string, { cwd, log = true }: { cwd?: string; log?: boolean; } = {}): { exec$: Observable<any>, pid: string; } {
     const pid = this.uuid();
 
     return {
@@ -61,13 +61,11 @@ export class ShellService {
 
         this.pcs.set(pid, pcs);
 
-        pcs.stdout.on('data', (message) => {
-          console.log(message.toString());
-
-          this.ngZone.run(() => {
-            subscriber.next(message.toString());
+        if (log) {
+          pcs.stdout.on('data', (message) => {
+            console.log(message.toString());
           });
-        });
+        }
 
         pcs
           .then(({ stdout, stderr }) => {

@@ -23,7 +23,7 @@
             Dependencies
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <howto-dependencies [dependencies]="project.dependencies"></howto-dependencies>
+        <howto-dependencies [dependencies]="project.dependencies" (install)="handleInstallDependency($event)"></howto-dependencies>
       </mat-expansion-panel>
       <mat-expansion-panel>
         <mat-expansion-panel-header>
